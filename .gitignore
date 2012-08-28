@@ -2,5 +2,7 @@
 *.pr
 *.slc
 *.exe
+*.obj
+*.lib
 si/
 *.lnk
