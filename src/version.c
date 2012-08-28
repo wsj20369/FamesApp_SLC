@@ -20,12 +20,12 @@
  *       2) minor:  次版本号, 次版本号的变化代表了在部分功能上有所加强或改变
 **----------------------------------------------------------------------------------*/
 char  ___NAME[]      =      "SLC";
-char  ___AUTHOR[]    =      "KaDar";
+char  ___AUTHOR[]    =      "Jun";
 
 #define VersionMajor         0
 #define VersionMinor         9
 
-#define VersionString       "0.9"
+#define VersionString       "0.9.00001" /* 不可超过32个字节 */
 
 INT16U get_version(void)
 {
@@ -49,7 +49,7 @@ STRING get_version_string(void)
 *
 *  从2011-1-24日开始创建, 到2011-4-25日完成, 共历时三个月
 *
-*
+*  1) 2012-8-19 开始继续开发, 加入注册机制
 *
 *
 *

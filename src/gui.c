@@ -34,8 +34,6 @@ void slc_init_gui(void)
     init_welcome_screen();
     show_palette_init();
     init_main_screen();
-    init_password_dialog();
-    init_yes_or_no_dialog();
     init_send_screen();      /* ¶©µ¥·¢ËÍ»­Ãæ */
 
     StartGUI();

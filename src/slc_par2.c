@@ -99,7 +99,7 @@ static char * __err_port_stop_zh    = "停止位无效, 其正确的范围应该是: 1 ~ 2";
 static char * __err_port_irq_zh     = "中断号(IRQ)无效, 其正确的范围应该是: 3 ~ 15";
 static char * __err_port_parity_zh  = "校验位应该是以下之一: N, E, O";
 
-static char * __err_port_base_en    = "I/O Port Address Incorrect, Try again!";
+static char * __err_port_base_en    = "I/O Port Address Invalid, Try again!";
 static char * __err_port_rate_en    = "Baudrate Invalid! [2400 ~ 115200]";
 static char * __err_port_data_en    = "Data Bits Invalid! [5 ~ 8]";
 static char * __err_port_stop_en    = "Stop Bits Invalid! [1 ~ 2]";
@@ -195,7 +195,10 @@ INPUT_DIALOG_ITEM("启动模式:",  __slc_start_mode,   3,  ___X+10,  ___Y+56,  180,
 #define ___Y  213
 INPUT_DIALOG_GROUP(" 其它选项 ", __misc, ___X, ___Y, 216, 223, ___FONT, GROUPBOX_STYLE_CAPTION)
 INPUT_DIALOG_ITEM("语言选择:",   __slc_language,    1,  ___X+10,  ___Y+56,  180, 28, ___FONT, ___STYLE,  "语言: 0=简体中文(GB2312), 1=ENGLISH")
+/* 紫色背景
 INPUT_DIALOG_SET(slc_global_param_dialog, "分压机系统参数", &icon, 22, 96, 972, 540, 189, 66, 1, FORM_STYLE_XP_BORDER|FORM_STYLE_TITLE)
+*/
+INPUT_DIALOG_SET(slc_global_param_dialog, "分压机系统参数", &icon, 22, 96, 972, 540, 70, WIDGET_BKCOLOR, 1, FORM_STYLE_XP_BORDER|FORM_STYLE_TITLE)
 DECLARE_INPUT_DIALOG_ENDED(slc_global_param_dialog);
 
 gui_widget * init_slc_global_param_dlg(void)
@@ -263,7 +266,7 @@ gui_widget * init_slc_global_param_dlg(void)
 
     #undef ____do_set
 
-    slc_global_param_dlg =  input_dialog_initialize(&slc_global_param_dialog);
+    slc_global_param_dlg = input_dialog_initialize(&slc_global_param_dialog);
     input_dialog_set_buttons_caption(&slc_global_param_dialog, 
                                      pick_string("确认[F10]", "OK.[F10]"), 
                                      pick_string("取消[ESC]", "No.[ESC]"));
@@ -278,7 +281,7 @@ gui_widget * init_slc_global_param_dlg(void)
 
 static void ____slc_global_param_alert(char * s)
 {
-    input_dialog_alert(&slc_global_param_dialog, s, COLOR_WARNING_236);
+    input_dialog_alert(&slc_global_param_dialog, s, COLOR_WARNING);
 }
 
 static char * __parity_str[] = { "None", "Even", "Odd" };
@@ -483,9 +486,9 @@ int slc_global_param_finish(int id, char *buf, void * data, KEYCODE key)
             __config->slc[0].k_number = temp;
             break;
         case __slc_1_l_nr:
-            if(temp < 4 || temp > 16){
-                ____slc_global_param_alert(pick_string("线数不对, 正确的范围是: [4, 16]",
-                                                       "L Number Invalid! [4, 16]"));
+            if(temp < 4 || temp > 16 || (temp & 0x1)){
+                ____slc_global_param_alert(pick_string("线数不对, 正确的范围是: [4, 16], 且只能是偶数",
+                                                       "L Number Invalid! [4, 16], Only Even Number"));
                 return 0;
             }
             __config->slc[0].l_number = temp;
@@ -512,9 +515,9 @@ int slc_global_param_finish(int id, char *buf, void * data, KEYCODE key)
             __config->slc[1].k_number = temp;
             break;
         case __slc_2_l_nr:
-            if(temp < 4 || temp > 16){
-                ____slc_global_param_alert(pick_string("线数不对, 正确的范围是: [4, 16]",
-                                                       "L Number Invalid! [4, 16]"));
+            if(temp < 4 || temp > 16 || (temp & 0x1)){
+                ____slc_global_param_alert(pick_string("线数不对, 正确的范围是: [4, 16], 且只能是偶数",
+                                                       "L Number Invalid! [4, 16], Only Even Number"));
                 return 0;
             }
             __config->slc[1].l_number = temp;

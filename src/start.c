@@ -20,8 +20,12 @@ void startup_init(void)
 {
     InitPLCService();
     OpenConsole();
-    if(!slc_initialize()){
-        sys_print("Fatal Error: SLC-CORE Initialization Failed!!!\n");
+    if (!slc_initialize()) {
+        sys_print("Fatal Error: SLC-CORE Init Failed!!!\n");
+        ExitApplication();
+    }
+    if (register_service_init() == fail) {
+        sys_print("Fatal Error: Register Service Init Failed!!!\n");
         ExitApplication();
     }
 }
@@ -44,7 +48,7 @@ void sk_refresh_screen(void)
 /*------------------------------------------------------------------------------------
  * 函数:    start()
  *
- * 描述:    SLC主任务, 提供用户对SLC的控制
+ * 描述:    SLC启始任务, 初始化并提供用户对SLC的控制
 **----------------------------------------------------------------------------------*/
 void __task start(void * data)
 {
@@ -52,6 +56,17 @@ void __task start(void * data)
     extern struct slc_config_s config;
 
     data = data;
+
+    #if 0
+    lock_kernel();
+    {
+        struct date today;
+        getdate(&today);
+        if(today.da_year != 2011 || (today.da_year == 2011 && today.da_mon >= 9))
+            Register();
+    }
+    unlock_kernel();
+    #endif
 
     startup_init();
 
@@ -71,11 +86,14 @@ void __task start(void * data)
     slc_open_plc();
 
     slc_init_gui();
+
+    #if 0
     welcome_start();
     ___s[0] = 0;
     load_string(___s, sizeof(___s), "welcome_started");
     startup_message(___s);
     welcome_ended();
+    #endif
 
     active_main_screen(); /* 显示主画面 */
 

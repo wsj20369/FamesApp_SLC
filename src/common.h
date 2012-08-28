@@ -10,6 +10,8 @@
 
 #include <string.h>
 
+#include "reg_core.h"
+#include "slc_reg.h"
 #include "passwd.h"
 #include "yes_no.h"
 #include "order.h"
@@ -66,8 +68,6 @@ void init_send_screen(void);
 extern int font16, font48, font24, font20, font_mntr;
 
 extern struct slc_config_s config;
-
-void Register(void); /* ×¢²áº¯Êý */
 
 INT16U get_version(void);
 STRING get_version_string(void);

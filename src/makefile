@@ -1,5 +1,5 @@
-COMPILER    = tcc -c -1 -B -S -ml -w -Ic:\tc\include -I..\..\include
-HEADFILE    = common.h config.h keycmd.h order.h ord_edit.h preview.h slc_core.h slc_mntr.h slc_para.h slc_whet.h passwd.h yes_no.h yx_dat.h slc_lb.h cim_link.h io_card.h slc_ctrl.h plc_def.h        
+COMPILER    = tcc -c -1 -B -S -ml -w -Ic:\tc\include -I..\..\lib\include
+HEADFILE    = common.h config.h keycmd.h order.h ord_edit.h preview.h slc_core.h slc_mntr.h slc_para.h slc_whet.h passwd.h yes_no.h yx_dat.h slc_lb.h cim_link.h io_card.h slc_ctrl.h plc_def.h slc_reg.h reg_core.h
 
 dstfile     = slc.lib
 
@@ -12,8 +12,8 @@ LibList3    =  slc_mntr.obj  order.obj  ord_edit.obj  slc_whet.obj  yx_dat.obj  
 LibFile3    = +slc_mntr.obj +order.obj +ord_edit.obj +slc_whet.obj +yx_dat.obj +slc_lb.obj +cim_link.obj
 LibList4    =  io_card.obj  user_reg.obj  version.obj  slc_ctrl.obj  m1_plc.obj  m2_plc.obj  plc.obj  plc_test.obj
 LibFile4    = +io_card.obj +user_reg.obj +version.obj +slc_ctrl.obj +m1_plc.obj +m2_plc.obj +plc.obj +plc_test.obj
-LibList5    =  slc_malf.obj  slc_para.obj  slc_par2.obj
-LibFile5    = +slc_malf.obj +slc_para.obj +slc_par2.obj
+LibList5    =  slc_malf.obj  slc_para.obj  slc_par2.obj  slc_reg.obj  reg_core.obj
+LibFile5    = +slc_malf.obj +slc_para.obj +slc_par2.obj +slc_reg.obj +reg_core.obj
 
 Libtemp1    = __tmp1.lib
 Libtemp2    = __tmp2.lib
@@ -116,6 +116,12 @@ slc_send.obj: slc_send.c $(HEADFILE)
 
 slc_malf.obj: slc_malf.c $(HEADFILE)
 	$(COMPILER) slc_malf.c
+
+slc_reg.obj: slc_reg.c $(HEADFILE)
+	$(COMPILER) slc_reg.c
+
+reg_core.obj: reg_core.c $(HEADFILE)
+	$(COMPILER) reg_core.c
 
 language.obj: language.c $(HEADFILE)
 	$(COMPILER) language.c

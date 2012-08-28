@@ -49,7 +49,7 @@ void Register(void)
     char read_buffer[]="                                        ";
     long wait;
 
-    fp = fopen("kadar.dat", "r");
+    fp = fopen("__reg.dat", "r");
     if( fp ){
         fscanf(fp, "%s",  read_buffer);
         fclose(fp);     
@@ -87,7 +87,7 @@ void Register(void)
     printf("Please Input Register Code: ");
     scanf("%s", Register_Code);
     if( ! strcmp(Register_Code,  hdstring) ){
-    fp = fopen ("kadar.dat", "w");
+    fp = fopen ("__reg.dat", "w");
     if( fp ){
         fprintf(fp, "%s", hdstring);
         fclose(fp);

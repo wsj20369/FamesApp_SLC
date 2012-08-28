@@ -38,7 +38,7 @@ void init_yes_or_no_dialog(void)
     gui_widget * form;
     int x, y, width, height, font, __t;
     COLOR bkcolor;
-    
+
     x = 0;
     y = 0;
     width = 480;
@@ -53,13 +53,13 @@ void init_yes_or_no_dialog(void)
     if(!widget)
         goto some_error;
     yes_no_dialog = widget;
-    gui_form_init_private(widget, 128);
+    gui_form_init_private(widget, 64);
     gui_form_set_icon(widget, &icon);
-    
+
     /* YES按钮 */
-    __t  = (width-160);
+    __t  = (width-180);
     __t /= 3;
-    widget = gui_create_widget(GUI_WIDGET_BUTTON, (__t-20), (height-56), 110, 28, 0, 0, font, 0);
+    widget = gui_create_widget(GUI_WIDGET_BUTTON, (__t-20), (height-56), 132, 36, 0, 0, font, 0);
     if(!widget)
         goto some_error;
     yes_button = widget;
@@ -69,7 +69,7 @@ void init_yes_or_no_dialog(void)
 
     /* NO按钮 */
     __t += 112;
-    widget = gui_create_widget(GUI_WIDGET_BUTTON, (width-__t), (height-56), 110, 28, 0, 0, font, 0);
+    widget = gui_create_widget(GUI_WIDGET_BUTTON, (width-__t), (height-56), 132, 36, 0, 0, font, 0);
     if(!widget)
         goto some_error;
     no_button = widget;
@@ -139,6 +139,7 @@ BOOL check_yes_no_dialog(int x, int y, char * caption, char * text)
     int  loop, index;
     KEYCODE key;
     static int lock = 0;
+    #define ____button_style BUTTON_STYLE_CLIENT_BDR
 
     os_mutex_lock(lock);
 
@@ -147,8 +148,8 @@ BOOL check_yes_no_dialog(int x, int y, char * caption, char * text)
     if(!text)
         text = pick_string("确认吗?", "Can you Confirm?");
 
-    gui_set_widget_style(yes_button, 0);
-    gui_set_widget_style(no_button, BUTTON_STYLE_PRESSED);
+    gui_set_widget_style(yes_button, ____button_style);
+    gui_set_widget_style(no_button, ____button_style|BUTTON_STYLE_PRESSED);
     gui_label_set_text(text_label, text);
     gui_set_widget_location(yes_no_dialog, x, y);
     gui_form_set_caption(yes_no_dialog, caption);
@@ -199,16 +200,16 @@ BOOL check_yes_no_dialog(int x, int y, char * caption, char * text)
         }
         if(loop){
             if(index == 2){
-                gui_set_widget_style(no_button, BUTTON_STYLE_PRESSED);
-                gui_set_widget_style(yes_button, 0);
+                gui_set_widget_style(no_button, ____button_style|BUTTON_STYLE_PRESSED);
+                gui_set_widget_style(yes_button, ____button_style);
             } else {
-                gui_set_widget_style(yes_button, BUTTON_STYLE_PRESSED);
-                gui_set_widget_style(no_button, 0);
+                gui_set_widget_style(yes_button, ____button_style|BUTTON_STYLE_PRESSED);
+                gui_set_widget_style(no_button, ____button_style);
             }
         }
     }
 
-    gui_hide_widget(password_dialog);
+    gui_hide_widget(yes_no_dialog);
 
     os_mutex_unlock(lock);
 
