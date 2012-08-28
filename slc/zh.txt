@@ -1,0 +1,79 @@
+
+//简体中文
+
+
+[欢迎画面/welcome screen]
+welcome_title=欢迎使用本公司的产品 - 卡达电脑
+welcome_started=启动完成, 请按[ENTER]键继续......
+
+[图片/Images]
+welcome_picture=welcome.bmp
+icon_picture=icon.bmp
+company_picture=company.bmp
+
+
+[主画面]
+slc_title=分压机控制系统(Ver: 0.0.1) - 卡达电脑 [ 电话:0769-85901555  传真:0769-85925811 ]
+first_note=提示: 如果您累了, 就要休息休息! 祝您工作顺利, 笑口常开!
+
+
+
+[主画面颜色/Main Screen Colors]
+
+color_order_title=251
+bkcolor_order_title=37
+
+color_order_data=189
+bkcolor_order_data=66
+
+color_preview=253
+bkcolor_preview=66
+
+color_buttons=71
+bkcolor_buttons=2
+
+bkcolor_other_dialog=0
+
+[监控画面颜色]
+ANIMATION_COLOR=71
+ANIMATION_BKCOLOR=236
+KL_BORDER_COLOR=70
+
+
+[压型说明]
+press_type_1=凹尖
+press_type_2=平尖
+press_type_3=双尖
+
+
+[故障说明, 最多32个]
+fault_1=刀1与刀2相撞
+fault_2=刀2与刀3相撞
+fault_3=刀3与刀4相撞
+fault_4=刀4与刀5相撞
+fault_5=刀5与刀6相撞
+fault_6=刀6与刀7相撞
+fault_7=刀7与刀8相撞
+fault_8=刀8与刀9相撞
+fault_9=线1与线2相撞
+fault_10=线2与线3相撞
+fault_11=线3与线4相撞
+fault_12=线4与线5相撞
+fault_13=线5与线6相撞
+fault_14=线6与线7相撞
+fault_15=线7与线8相撞
+fault_16=线8与线9相撞
+fault_17=线9与线10相撞
+fault_18=线10与线11相撞
+fault_19=线11与线12相撞
+
+
+
+
+
+
+
+
+
+
+

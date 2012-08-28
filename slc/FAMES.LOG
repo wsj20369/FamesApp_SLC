@@ -1,0 +1,6 @@
+5     
+2011-04-23  9:45:08.64 => Err=1011 : BMPINFO is NOT ready when UnLoading BMP!
+2011-04-23  9:45:20.12 => Err=1011 : BMPINFO is NOT ready when UnLoading BMP!
+2011-04-23  9:45:44.68 => Err=1011 : BMPINFO is NOT ready when UnLoading BMP!
+2011-04-23  9:48:24.73 => Err=20   : Timeout when waiting plc's response!
+2011-04-23  9:51:08.63 => Err=1011 : BMPINFO is NOT ready when UnLoading BMP!
