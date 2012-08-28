@@ -2,7 +2,7 @@
 //在英文模式下的字符串
 
 [欢迎画面/welcome screen]
-welcome_title=Welcome to use our Product - KaDar
+welcome_title=Welcome to use our Product - FamesOS
 welcome_started=SLC started, press [ENTER] to continue......
 
 [图片/Images]
@@ -12,7 +12,7 @@ company_picture=company.bmp
 
 
 [主画面/main screen]
-slc_title=SLC Control System(Ver: 0.0.1) - KaDar [ Tel:0769-85901555  Fax:0769-85925811 ]
+slc_title=SLC Control System(Ver: 0.0.1) - Jun
 first_note=Note: Rest is important to keep healthy! Good Luck!
 
 [主画面颜色/Main Screen Colors]

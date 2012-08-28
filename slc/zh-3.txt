@@ -23,11 +23,11 @@ first_note=提示: 如果您累了, 就要休息休息! 祝您工作顺利, 笑口常开!
 color_order_title=251
 bkcolor_order_title=37
 
-color_order_data=70
-bkcolor_order_data=236
+color_order_data=189
+bkcolor_order_data=66
 
-color_preview=136
-bkcolor_preview=236
+color_preview=253
+bkcolor_preview=66
 
 color_buttons=71
 bkcolor_buttons=2
@@ -35,9 +35,9 @@ bkcolor_buttons=2
 bkcolor_other_dialog=0
 
 [监控画面颜色]
-ANIMATION_COLOR=71
-ANIMATION_BKCOLOR=236
-KL_BORDER_COLOR=70
+ANIMATION_COLOR=189
+ANIMATION_BKCOLOR=70
+KL_BORDER_COLOR=71
 
 
 [压型说明]
