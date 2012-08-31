@@ -27,6 +27,27 @@ struct sn_struct {
 #define SN_STRUCT_MAGIC 0x4e53
 
 /*-----------------------------------------------------------------------------------------
+ * machine id structure
+**---------------------------------------------------------------------------------------*/
+struct mach_id_struct {
+    int magic; /* Magic Number: 0x4449, 'ID' */
+    unsigned char id_seed[2];
+    unsigned char lrc[2];
+    unsigned char id_encrypted1[8];
+    unsigned char id_encrypted2[8];
+};
+
+#define ID_STRUCT_MAGIC 0x4449
+
+#if sizeof(struct mach_id_struct) != ID_LEN
+#error sizeof(struct mach_id_struct) != ID_LEN, please check it!
+#endif
+
+#define __ID_ENCRYPT(c, seed) (((((c) - 0x2a) ^ (seed + 17)) + 0x64 ) ^ 0xa1)
+#define __ID_DECRYPT(c, seed) (((((c) ^ 0xa1) - 0x64) ^ (seed + 17)) + 0x2a)
+
+
+/*-----------------------------------------------------------------------------------------
  * Definations & Prototypes
 **---------------------------------------------------------------------------------------*/
 #define SERVICE_STACK_SIZE  2048
@@ -49,6 +70,7 @@ static int __save_sn(char __IN * user_sn);
 static int __do_check_sn(char __BUF * machine_sn);
 static void __encrypt_machine_id(char __BUF * machine_id);
 
+int machine_id_get(unsigned char __BUF * buf, int buf_len);
 
 static int default_register_callback(int cmd, void * data)
 {
@@ -191,7 +213,9 @@ static void __do_request(int cmd, void * data)
 }
 
 /*-----------------------------------------------------------------------------------------
- * Register Algorithm & File Operations
+ *
+ * SN File & SN Encode Algorithm
+ *
 **---------------------------------------------------------------------------------------*/
 static int __sn_has_been_readed = 0;
 static char __machine_sn[SN_MAX_LEN];
@@ -221,7 +245,7 @@ static int ____make_lrc(struct sn_struct * buf, int do_check)
     buf->lrc[1] = 0;
     for (i = 0; i < sizeof(*buf); i++)
         new_lrc += c[i];
-    new_lrc = ~new_lrc; /* 取反 */
+    new_lrc = (~new_lrc) + 1; /* 取补 */
 
     if (do_check) { /* 检查LRC */
         if (new_lrc == lrc) {
@@ -248,7 +272,7 @@ static void ____encrypt_sn(struct sn_struct * buf, char __IN * user_sn)
     FamesAssert(user_sn);
 
     /* 这里不用原子操作是因为我们不需要这个数据的正确性
-     * 我们需要的只是一个随机数, 用于生成seed!
+     * 我们需要的只是一个随机数, 用于生成seed! [下同]
     */
     lock_kernel();
     seconds = SecondsFromStart;
@@ -375,21 +399,211 @@ static int __save_sn(char __IN * user_sn)
     return ret;
 }
 
-static int __do_check_sn(char __BUF * machine_sn)
-{
-    if (!STRCMP(machine_sn, "abcde-12345-xxxxx-cdefg"))
-        return ok;
-
-    return fail;
-}
-
+/*-----------------------------------------------------------------------------------------
+ *
+ *  Read ID & ID Encode Algorithm
+ *
+**---------------------------------------------------------------------------------------*/
 static void __encrypt_machine_id(char __BUF * machine_id)
 {
+    struct mach_id_struct mach_id;
+    unsigned char buf[sizeof(mach_id.id_encrypted1)];
+    unsigned char seed, saved_seed;
+    INT32U seconds;
+    unsigned char lrc;
+    unsigned char *c;
+    int i;
+
     FamesAssert(machine_id != NULL);
 
-    STRCPY(machine_id, "abcde-12345-xxxxx-cdefg");
+    machine_id[0] = '<';
+    machine_id[1] = ' ';
+    machine_id[2] = 'E';
+    machine_id[3] = 'r';
+    machine_id[4] = 'r';
+    machine_id[5] = ' ';
+    machine_id[6] = '>';
+    machine_id[7] = '\0';
+
+    if (!machine_id_get(buf, sizeof(buf)))
+        return;
+
+    /* 先加密 */
+    lock_kernel();
+    seconds = SecondsFromStart;
+    unlock_kernel();
+    seed = (unsigned char)(seconds + (seconds >> 4));
+    saved_seed = seed;
+    for (i = 0; i < sizeof(buf); i++) {
+        unsigned char ch;
+        seed += SEED_INCREMENT;
+        ch = (buf[i] ^ seed); /* 异或加密 */
+        mach_id.id_encrypted1[i] = ____HIGH4(ch) + 1;
+        mach_id.id_encrypted2[i] = ____LOW4(ch) + 1;
+    }
+    mach_id.id_seed[0] = ____HIGH4(saved_seed);
+    mach_id.id_seed[1] = ____LOW4(saved_seed);
+
+    /* 再计算校验码 */
+    c = (unsigned char *)&mach_id;
+    lrc = 0;
+    mach_id.magic = ID_STRUCT_MAGIC;
+    mach_id.lrc[0] = 0;
+    mach_id.lrc[1] = 0;
+
+    for (i = 0; i < sizeof(struct mach_id_struct); i++)
+        lrc += c[i];
+    lrc = (~lrc) + 1; /* 取补 */
+
+    mach_id.lrc[0] = ____HIGH4(lrc); /* 这里会出现@, 须改写 */
+    mach_id.lrc[1] = ____LOW4(lrc);
+
+    MEMCPY((INT08S *)machine_id, (INT08S *)c, sizeof(struct mach_id_struct));
+    machine_id[sizeof(struct mach_id_struct)] = 0;
 }
 
+#ifdef THIS_IS_UNREGISTER
+/* 解密用户发回来的machine_id */
+static int __decrypt_machine_id(char __BUF * machine_id, struct mach_id_struct __IN * user_id)
+{
+    unsigned char id_buf[8]; /* 硬件ID实际上只有8位 */
+    unsigned char seed;
+    unsigned char lrc, lrc_check;
+    unsigned char *c;
+    int i;
+
+    FamesAssert(user_id != NULL);
+    FamesAssert(machine_id != NULL);
+
+    /* 先检查MagicNumber */
+    if (user_id->magic != ID_STRUCT_MAGIC)
+        return 0;
+
+    /* 再检查校验码 */
+    lrc = ____GLUE(user_id->lrc[0], user_id->lrc[1]);
+    user_id->lrc[0] = 0;
+    user_id->lrc[1] = 0;
+    c = (unsigned char *)user_id;
+    lrc_check = 0;
+    for (i = 0; i < sizeof(struct mach_id_struct); i++)
+        lrc_check += c[i];
+    lrc_check = (~lrc_check) + 1; /* 取补 */
+    if (lrc != lrc_check)
+        return 0; /* 校验码不对 */
+
+    /* 看来这个ID是对的, 那么就解密吧 */
+    seed = ____GLUE(user_id->id_seed[0], user_id->id_seed[1]);
+    for (i = 0; i < sizeof(id_buf); i++) {
+        unsigned char ch;
+        seed += SEED_INCREMENT;
+        ch = ____GLUE((user_id->id_encrypted1[i] - 1), (user_id->id_encrypted2[i] - 1));
+        id_buf[i] = (ch ^ seed); /* 异或解密 */
+    }
+
+    if (i > 0) {
+        MEMCPY((INT08S *)machine_id, (INT08S *)id_buf, i);
+        machine_id[i] = 0; /* 实际上这不是个字符串(而是个HEX数组), 但还是给它加个结束符吧 */
+    }
+
+    return i;
+}
+
+/*
+ * 返回值为解码的字节数, 若出错则返回0
+*/
+int decrypt_machine_id(char __BUF * machine_id, char __IN * user_id)
+{
+    return __decrypt_machine_id(machine_id, (struct mach_id_struct *)user_id);
+}
+#endif
+
+/*-----------------------------------------------------------------------------------------
+ *
+ *  Register Algorithm
+ *
+**---------------------------------------------------------------------------------------*/
+static int __do_check_sn(char __BUF * machine_sn)
+{
+    unsigned char real_sn[SN_LEN];
+    unsigned char id_buf[8]; /* 硬件ID实际上只有8位 */
+    unsigned char seed;
+    int i, j, error_count;
+
+    FamesAssert(machine_sn != NULL);
+
+    if (!machine_id_get(id_buf, sizeof(id_buf)))
+        return fail;
+
+    /* 去掉格式化串xxxxx-xxxxx-xxxxx-xxxxx中的'-' */
+    for (i = 0, j = 0; i < SN_LEN; i++) {
+        if (i == 5 || i == 11 || i == 17)
+            continue; /* 跳过对应的位置 '-' */
+        real_sn[j++] = machine_sn[i];
+    }
+
+    error_count = 0;
+
+    seed = ____GLUE(real_sn[0], real_sn[1]);
+    for (i = 0, j = 0; j < sizeof(id_buf); j++, i++) {
+        unsigned char ch, h4, l4;
+        h4 = (unsigned char)CHARtoHEX((INT08S)(real_sn[i+2] ^ 0xa));
+        l4 = (unsigned char)CHARtoHEX((INT08S)(real_sn[i+10] ^ 0xa));
+        ch = __ID_ENCRYPT(id_buf[j], seed);
+        if (ch != ((h4 << 4) | l4))
+            error_count++;
+    }
+
+    return (!error_count);
+}
+
+#ifdef THIS_IS_UNREGISTER
+
+/* 注册序列号SN的生成算法 */
+void generate_register_sn(char __BUF * user_sn, char __IN * machine_id)
+{
+    unsigned char real_sn[SN_LEN];
+    unsigned char id_buf[8]; /* 硬件ID实际上只有8位 */
+    INT32U seconds;
+    unsigned char seed;
+    int i, j;
+
+    FamesAssert(user_sn != NULL);
+    FamesAssert(machine_id != NULL);
+
+    MEMCPY((INT08S *)id_buf, (INT08S *)machine_id, sizeof(id_buf));
+
+    lock_kernel();
+    seconds = SecondsFromStart;
+    unlock_kernel();
+
+    seed = (unsigned char)(seconds + (seconds << 5));
+    real_sn[0] = ____HIGH4(seed);
+    real_sn[1] = ____LOW4(seed);
+    for (i = 0, j = 0; j < sizeof(id_buf); j++, i++) {
+        unsigned char ch = __ID_ENCRYPT(id_buf[j], seed);
+        real_sn[i+2]  = (HEXtoCHAR(0xf & (ch >> 4)) ^ 0xa);
+        real_sn[i+10] = (HEXtoCHAR(0xf & (ch)) ^ 0xa); /* 0xa是精心挑选的 */
+    }
+    real_sn[18] = ____HIGH4((~seed));
+    real_sn[19] = ____LOW4((~seed));
+
+    /* 格式化为: xxxxx-xxxxx-xxxxx-xxxxx */
+    for (i = 0, j = 0; i < SN_LEN; i++, j++) {
+        if (i == 5 || i == 11 || i == 17) {
+            user_sn[i++] = '-'; /* 加入符号 '-' */
+        }
+        user_sn[i] = real_sn[j];
+    }
+    user_sn[i] = 0;
+}
+
+#endif
+
+int machine_id_get(unsigned char __BUF * buf, int buf_len)
+{
+    MEMSET((INT08S *)buf, '8', buf_len);
+    return ok;
+}
 
 /*=========================================================================================
  * 

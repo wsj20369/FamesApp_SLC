@@ -149,6 +149,6 @@ $(Libtemp5):  $(LibList5)
 $(Lib):  $(LibList1) $(LibList2) $(LibList3) $(LibList4) $(LibList5)
 	del  $(Lib)
 	tlib $(Lib) +$(Libtemp1) +$(Libtemp2) +$(Libtemp3) +$(Libtemp4) +$(Libtemp5)
-	copy $(Lib) ..
+
 
 

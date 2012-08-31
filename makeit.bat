@@ -5,9 +5,15 @@ CD   src
 CALL MAKEFILE > ..\t.txt
 CD   ..
 
+REM ±àÒë×¢²á»ú
+CD MAKE_SN
+CALL MAKEFILE >> ..\t.txt
+cd ..
+
 REM  Á¬½Ó
 make makefile
 
+ECHO.
 ECHO ALL OK. 
 
 notepad t.txt

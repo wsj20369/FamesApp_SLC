@@ -3,7 +3,7 @@
 
 
 [欢迎画面/welcome screen]
-welcome_title=欢迎使用本公司的产品 - 卡达电脑
+welcome_title=欢迎使用本公司的产品
 welcome_started=启动完成, 请按[ENTER]键继续......
 
 [图片/Images]
@@ -13,7 +13,7 @@ company_picture=company.bmp
 
 
 [主画面]
-slc_title=分压机控制系统(Ver: 0.0.1) - 卡达电脑 [ 电话:0769-85901555  传真:0769-85925811 ]
+slc_title=分压机控制系统(Ver: 0.9)
 first_note=提示: 如果您累了, 就要休息休息! 祝您工作顺利, 笑口常开!
 
 

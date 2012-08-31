@@ -31,7 +31,7 @@ enum register_service_request_cmds
     NUMBER_OF_RS_REQUEST_CMDS,
 };
 
-#define ID_LEN        20    /* ID 的实际长度 */
+#define ID_LEN        22    /* ID 的实际长度 */
 #define SN_LEN        23    /* SN 的实际长度 */
 
 #define ID_MAX_LEN    32
