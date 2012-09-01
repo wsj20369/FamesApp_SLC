@@ -10,10 +10,10 @@ LibList2    =  preload.obj  welcome.obj  main.obj  keycmd.obj  preview.obj  pass
 LibFile2    = +preload.obj +welcome.obj +main.obj +keycmd.obj +preview.obj +passwd.obj +yes_no.obj +slc_send.obj
 LibList3    =  slc_mntr.obj  order.obj  ord_edit.obj  slc_whet.obj  yx_dat.obj  slc_lb.obj  cim_link.obj
 LibFile3    = +slc_mntr.obj +order.obj +ord_edit.obj +slc_whet.obj +yx_dat.obj +slc_lb.obj +cim_link.obj
-LibList4    =  io_card.obj  user_reg.obj  version.obj  slc_ctrl.obj  m1_plc.obj  m2_plc.obj  plc.obj  plc_test.obj
-LibFile4    = +io_card.obj +user_reg.obj +version.obj +slc_ctrl.obj +m1_plc.obj +m2_plc.obj +plc.obj +plc_test.obj
-LibList5    =  slc_malf.obj  slc_para.obj  slc_par2.obj  slc_reg.obj  reg_core.obj
-LibFile5    = +slc_malf.obj +slc_para.obj +slc_par2.obj +slc_reg.obj +reg_core.obj
+LibList4    =  io_card.obj  version.obj  slc_ctrl.obj  m1_plc.obj  m2_plc.obj  plc.obj  plc_test.obj
+LibFile4    = +io_card.obj +version.obj +slc_ctrl.obj +m1_plc.obj +m2_plc.obj +plc.obj +plc_test.obj
+LibList5    =  slc_malf.obj  slc_para.obj  slc_par2.obj  slc_reg.obj  reg_core.obj  mach_id.obj
+LibFile5    = +slc_malf.obj +slc_para.obj +slc_par2.obj +slc_reg.obj +reg_core.obj +mach_id.obj
 
 Libtemp1    = __tmp1.lib
 Libtemp2    = __tmp2.lib
@@ -90,9 +90,6 @@ cim_link.obj: cim_link.c $(HEADFILE)
 io_card.obj: io_card.c $(HEADFILE)
 	$(COMPILER) io_card.c
 
-user_reg.obj: user_reg.c $(HEADFILE)
-	$(COMPILER) user_reg.c
-
 version.obj: version.c $(HEADFILE)
 	$(COMPILER) version.c
 
@@ -122,6 +119,9 @@ slc_reg.obj: slc_reg.c $(HEADFILE)
 
 reg_core.obj: reg_core.c $(HEADFILE)
 	$(COMPILER) reg_core.c
+
+mach_id.obj: mach_id.c $(HEADFILE)
+	$(COMPILER) mach_id.c
 
 language.obj: language.c $(HEADFILE)
 	$(COMPILER) language.c

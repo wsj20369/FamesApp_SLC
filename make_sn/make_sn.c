@@ -63,6 +63,16 @@ long get_free_mem(void)
     return mem;
 }
 
+/* 不用调用此函数, 这只是用来除去编译警告的, 并没有用 */
+int machine_id_get(unsigned char __BUF * buf, int buf_len)
+{
+    printf("Should not call this function, Please check it\n!");
+    buf = buf;
+    buf_len = buf_len;
+
+    return fail;
+}
+
 /*=========================================================================================
  * 
  * 本文件结束: slc/make_sn.c
