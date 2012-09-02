@@ -15,6 +15,7 @@ void __task start(void * data)
     char user_sn[32];
     char mach_id[32];
     char user_id[32], saved_id[32];
+    int i;
 
     data = data;
     OpenConsole();
@@ -31,7 +32,10 @@ void __task start(void * data)
     } else {
         generate_register_sn(user_sn, mach_id);
         printf("User ID: %s\n", saved_id);
-        printf("Mach ID: %s\n", mach_id);
+        printf("Mach ID: %02X", 0xff & mach_id[0]);
+        for (i = 1; i < MACH_ID_LEN; i++)
+            printf("-%02X", 0xff & mach_id[i]);
+        printf("\n");
         printf("User SN: %s\n", user_sn);
     }
     printf("\n---------------------------------------\n\n");

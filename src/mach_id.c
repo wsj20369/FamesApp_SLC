@@ -13,26 +13,55 @@
 #include <includes.h>
 #include "common.h"
 
+/*
+IDE控制器的端口(helppc 2.10):
+
+    170-17F  Fixed disk 1 (AT)
+    170 disk 1 data
+    171 disk 1 error
+    172 disk 1 sector count
+    173 disk 1 sector number
+    174 disk 1 cylinder low
+    175 disk 1 cylinder high
+    176 disk 1 drive/head
+    177 disk 1 status
+
+    1F0-1FF  Fixed disk 0 (AT)
+    1F0 disk 0 data
+    1F1 disk 0 error
+    1F2 disk 0 sector count
+    1F3 disk 0 sector number
+    1F4 disk 0 cylinder low
+    1F5 disk 0 cylinder high
+    1F6 disk 0 drive/head
+    1F7 disk 0 status
+*/
+
 #define IDE_SN_START_WORD 10
 #define IDE_SN_WORD_COUNT 10
 
-void __do_read_id(unsigned char __BUF * buf, int count)
+static int __do_read_id(unsigned char __BUF * buf, int count)
 {
     unsigned int dd[256]; /* DiskData */
     unsigned int dd_off; /* DiskData offset */
     unsigned char ide_sn_string[64];
-    int  length, i, j;
+    int  length, i, j, ret = ok;
     long wait;
 
     FamesAssert(buf != NULL);
 
     /* 读硬盘序列号 */
     lock_kernel();
+
     wait = 20000L;
     while (inportb(0x1F7) != 0x50) { /* Wait for controller not busy */
         wait--;
         if (wait <= 0L)
             break;
+    }
+    if (wait <= 0L) { /* still busy? or error occured? */
+        ret = fail;
+        goto unlock_out;
     }
     outportb(0x1F6, 0xA0); /* Get first/second drive */
     outportb(0x1F7, 0xEC); /* Get drive info data */
@@ -42,9 +71,18 @@ void __do_read_id(unsigned char __BUF * buf, int count)
         if (wait <= 0L)
             break;
     }
+    if (wait <= 0L) { /* still busy? or error occured? */
+        ret = fail;
+        goto unlock_out;
+    }
     for (dd_off = 0; dd_off != 256; dd_off++) /* Read "sector" */
         dd[dd_off] = inport(0x1F0);
+
+unlock_out:
     unlock_kernel();
+
+    if (ret == fail) /* Read fail, goto out */
+        goto out;
 
     /* 将序列号分离出来, 生成一个字符串 */
     for (i = 0, j = 0; i < IDE_SN_WORD_COUNT; i++) {
@@ -62,6 +100,10 @@ void __do_read_id(unsigned char __BUF * buf, int count)
         j++;
         j %= count;
     }
+    ret = ok;
+
+out:
+    return ret;
 }
 
 int machine_id_get(unsigned char __BUF * buf, int buf_len)
@@ -70,7 +112,8 @@ int machine_id_get(unsigned char __BUF * buf, int buf_len)
     static unsigned char ____machine_hard_id[12];
 
     if (!readed) {
-        __do_read_id(____machine_hard_id, 8); /* 硬件ID实际上只有8位 */
+        if (!__do_read_id(____machine_hard_id, 8)) /* 硬件ID实际上只有8位 */
+            return fail;
     }
 
     readed = 1;

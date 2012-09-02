@@ -25,7 +25,7 @@ char  ___AUTHOR[]    =      "Jun";
 #define VersionMajor         0
 #define VersionMinor         9
 
-#define VersionString       "0.9.00001" /* 不可超过32个字节 */
+#define VersionString       "0.9.00002" /* 不可超过32个字节 */
 
 INT16U get_version(void)
 {
@@ -50,7 +50,7 @@ STRING get_version_string(void)
 *  从2011-1-24日开始创建, 到2011-4-25日完成, 共历时三个月
 *
 *  1) 2012-8-19 开始继续开发, 加入注册机制
-*
+*  2) 2012-9-02 注册机制基本完成, 现可以使用, 将来可继续完善.
 *
 *
 *
