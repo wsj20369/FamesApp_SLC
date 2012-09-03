@@ -111,14 +111,18 @@ out:
 int machine_id_get(unsigned char __BUF * buf, int buf_len)
 {
     static int readed = 0;
+    static int do_read_count = 0;
     static unsigned char ____machine_hard_id[12];
 
     if (!readed) {
+        if (do_read_count >= 3) /* 最多重试3次 */
+            return fail;
+        do_read_count++;
         if (!__do_read_id(____machine_hard_id, 8)) /* 硬件ID实际上只有8位 */
             return fail;
     }
+    readed = 1; /* 读出来了, Oh Yeah! */
 
-    readed = 1;
     MEMSET((INT08S *)buf, 0, buf_len);
     if (buf_len > sizeof(____machine_hard_id))
         buf_len = sizeof(____machine_hard_id);
