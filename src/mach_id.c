@@ -53,7 +53,7 @@ static int __do_read_id(unsigned char __BUF * buf, int count)
     /* ∂¡”≤≈Ã–Ú¡–∫≈ */
     lock_kernel();
 
-    wait = 20000L;
+    wait = 200000L;
     while (inportb(0x1F7) != 0x50) { /* Wait for controller not busy */
         wait--;
         if (wait <= 0L)
@@ -63,9 +63,10 @@ static int __do_read_id(unsigned char __BUF * buf, int count)
         ret = fail;
         goto unlock_out;
     }
+
     outportb(0x1F6, 0xA0); /* Get first/second drive */
     outportb(0x1F7, 0xEC); /* Get drive info data */
-    wait = 20000L;
+    wait = 200000L;
     while (inportb(0x1F7) != 0x58) { /* Wait for data ready */
         wait--;
         if (wait <= 0L)
@@ -75,6 +76,7 @@ static int __do_read_id(unsigned char __BUF * buf, int count)
         ret = fail;
         goto unlock_out;
     }
+
     for (dd_off = 0; dd_off != 256; dd_off++) /* Read "sector" */
         dd[dd_off] = inport(0x1F0);
 
