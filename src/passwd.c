@@ -86,7 +86,9 @@ int password_entered(int id, char * buf, void * data, KEYCODE key)
         case __passwd_id:
             ___d = (INT32U *)data;
             *___d = STRtoINT32(buf, CHG_OPT_DEC);
-            putkey(F10);
+            if(key == ENTER){
+                putkey(F10);
+            }
             break;
         default:
             break;

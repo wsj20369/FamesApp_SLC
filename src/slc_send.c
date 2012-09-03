@@ -605,7 +605,7 @@ void slc_clear_fix_ok(int slc_index)
 {
     int tmp = 0;
 
-    #if 1 /* ≤‚ ‘ */
+    #if 0 /* ≤‚ ‘ */
     tmp = 1;
     ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_M, "X0063", &tmp, 1);
     tmp = 0;
