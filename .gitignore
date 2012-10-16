@@ -6,3 +6,7 @@
 *.lib
 si/
 *.lnk
+src/plc_defs/PLC_DEFS.LST
+t.txt
+slc.rar
+
