@@ -12,7 +12,7 @@ company_picture=company.bmp
 
 
 [主画面/main screen]
-slc_title=SLC Control System(Ver: 0.0.1) - Jun
+slc_title=SLC Control System(Ver: 0.9.1) - Jun
 first_note=Note: Rest is important to keep healthy! Good Luck!
 
 [主画面颜色/Main Screen Colors]

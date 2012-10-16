@@ -70,12 +70,12 @@ enum slc_global_param_id {
 
 static char __note_slc_type_zh[]    = "分压机类型: 0=普通型, 1=零压型.";
 static char __note_slc_k_nr_zh[]    = "刀数: 3 ~ 9";
-static char __note_slc_l_nr_zh[]    = "线数: 4 ~ 16";
+static char __note_slc_l_nr_zh[]    = "线数: 4 ~ 12";
 static char __note_slc_used_zh[]    = "1=使用, 0=不用";
 
 static char __note_slc_type_en[]    = "SLC Type: 0=Single, 1=Dual.";
 static char __note_slc_k_nr_en[]    = "K Number: 3 ~ 9";
-static char __note_slc_l_nr_en[]    = "L Number: 4 ~ 16";
+static char __note_slc_l_nr_en[]    = "L Number: 4 ~ 12";
 static char __note_slc_used_en[]    = "1=Use, 0=No";
 
 static char __note_port_base_zh[]   = "I/O地址, 比如3F8, 2F8等";
@@ -486,9 +486,9 @@ int slc_global_param_finish(int id, char *buf, void * data, KEYCODE key)
             __config->slc[0].k_number = temp;
             break;
         case __slc_1_l_nr:
-            if(temp < 4 || temp > 16 || (temp & 0x1)){
-                ____slc_global_param_alert(pick_string("线数不对, 正确的范围是: [4, 16], 且只能是偶数",
-                                                       "L Number Invalid! [4, 16], Only Even Number"));
+            if(temp < 4 || temp > 12 || (temp & 0x1)){
+                ____slc_global_param_alert(pick_string("线数不对, 正确的范围是: [4, 12], 且只能是偶数",
+                                                       "L Number Invalid! [4, 12], Only Even Number"));
                 return 0;
             }
             __config->slc[0].l_number = temp;
@@ -515,9 +515,9 @@ int slc_global_param_finish(int id, char *buf, void * data, KEYCODE key)
             __config->slc[1].k_number = temp;
             break;
         case __slc_2_l_nr:
-            if(temp < 4 || temp > 16 || (temp & 0x1)){
-                ____slc_global_param_alert(pick_string("线数不对, 正确的范围是: [4, 16], 且只能是偶数",
-                                                       "L Number Invalid! [4, 16], Only Even Number"));
+            if(temp < 4 || temp > 12 || (temp & 0x1)){
+                ____slc_global_param_alert(pick_string("线数不对, 正确的范围是: [4, 12], 且只能是偶数",
+                                                       "L Number Invalid! [4, 12], Only Even Number"));
                 return 0;
             }
             __config->slc[1].l_number = temp;

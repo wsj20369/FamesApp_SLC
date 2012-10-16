@@ -74,57 +74,73 @@ char * PLC_ADDR_SET_VALUE_L[] = { /* 线设定值 */
                                   "R02080", "R02082", "R02084", "R02086", "R02088", 
                                   "R02090", "R02092", "R02140", "R02354", "R02356",
                                   "R02358", "R02360", "R02104", "R02106", "R02108",
-                                  "R02110", "R02112", "R02114", "R02116", "R02118",
 };
 char * PLC_ADDR_SELECTED_L[]  = { /* 线选中状态 */
                                   "M0190", "M0191",
                                   "M0217", "M0218", "M0219", "M0220", "M0221", 
                                   "M0222", "M0223", "M0224", "M0225", "M0226", 
                                   "M0227", "M0228", "M0229", "M0230", "M0231", 
-                                  "M0232", "M0233", "M0234", "M0235", "M0236", 
 };
 char * PLC_ADDR_FINE_TUNE_L[] = { /* 线微调启动 */
                                   "M0825", "M0826", "M0827", "M0828", "M0829",
                                   "M0830", "M0831", "M0832", "M0833", "M0834",
                                   "M0835", "M0836", "M0837", "M0838", "M0839",
-                                  "M0840", "M0841", "M0842", "M0843", "M0844",
 };
 char   PLC_ADDR_FINE_TUNE[]   = "M0680";   /* 刀线微调总启动        */
 char   PLC_ADDR_YX[]          = "M0750";   /* 压型起始地址          */
-char   PLC_ADDR_SET_PRESS1[]  = "R01924";  /* 前压设定值            */
+char   PLC_ADDR_SET_PRESS1[]  = "R01926";  /* 前压设定值            */
 char   PLC_ADDR_SET_PRESS2[]  = "R01926";  /* 后压设定值            */
-char   PLC_ADDR_SET_FAN[]     = "R01928";  /* 吸风口设定值          */
+char   PLC_ADDR_SET_FAN[]     = "R01924";  /* 吸风口设定值          */
 
 char   PLC_ADDR_ACT_VALUE_K[] = "R02750";  /* 刀实际值起始地址      */
 char   PLC_ADDR_ACT_VALUE_L[] = "R02764";  /* 线实际值起始地址      */
-char   PLC_ADDR_ACT_PRESS1[]  = "R01910";  /* 前压实际值            */
+char   PLC_ADDR_ACT_PRESS1[]  = "R01912";  /* 前压实际值            */
 char   PLC_ADDR_ACT_PRESS2[]  = "R01912";  /* 后压实际值            */
-char   PLC_ADDR_ACT_FAN[]     = "R01914";  /* 吸风口实际值          */
+char   PLC_ADDR_ACT_FAN[]     = "R01910";  /* 吸风口实际值          */
 
-char   PLC_ADDR_ADJUST_K[]    = "R01956";  /* 刀校正值起始地址      */
 char   PLC_ADDR_ADJ_K_CFM[]   = "M0167";   /* 刀校正确认值起始地址  */
-char   PLC_ADDR_ADJUST_L[]    = "R02122";  /* 线校正值起始地址      */
-char   PLC_ADDR_ADJ_L_CFM[]   = "M0200";   /* 刀校正确认值起始地址  */
+char * PLC_ADDR_ADJUST_K[]    = {          /* 刀校正值起始地址      */
+                                  "R01956", "R01958", "R01960", "R01962", "R01964", 
+                                  "R01964", "R01964", "R01964", "R01964", "R01964",
+};
+char   PLC_ADDR_ADJ_L_CFM[]   = "M0200";   /* 线校正确认值起始地址  */
+char * PLC_ADDR_ADJUST_L[]    = {          /* 线校正值起始地址      */
+                                  "R02122", "R02124", "R02126", "R02128", "R02130", 
+                                  "R02132", "R02134", "R02146", "R02148", "R02148",
+                                  "R02148", "R02148", "R02148", "R02148", "R02148",
+};
 char   PLC_ADDR_ADJ_PRS1[]    = "R01966";  /* 压深1校正值地址       */
 char   PLC_ADDR_ADJ_P1_CFM[]  = "M0172";   /* 压深1校正确认值地址   */
-char   PLC_ADDR_ADJ_PRS2[]    = "R01968";  /* 压深2校正值地址       */
-char   PLC_ADDR_ADJ_P2_CFM[]  = "M0173";   /* 压深1校正确认值地址   */
-char   PLC_ADDR_ADJ_FAN[]     = "R01970";  /* 吸风校正值地址        */
-char   PLC_ADDR_ADJ_FAN_CFM[] = "M0174";   /* 吸风校正确认值地址    */
+char   PLC_ADDR_ADJ_PRS2[]    = "R01966";  /* 压深2校正值地址       */
+char   PLC_ADDR_ADJ_P2_CFM[]  = "M0172";   /* 压深1校正确认值地址   */
+char   PLC_ADDR_ADJ_FAN[]     = "R01968";  /* 吸风校正值地址        */
+char   PLC_ADDR_ADJ_FAN_CFM[] = "M0173";   /* 吸风校正确认值地址    */
+
+char   PLC_ADDR_ADJ_YX[]      = "R01970";  /* 压型校正值地址        */ /*FIXME: 暂时没有用到  */
+char   PLC_ADDR_ADJ_YX_CFM[]  = "M0174";   /* 压型校正确认值地址    */
 
 char   PLC_ADDR_REGRESS_K[]   = "R03000";  /* 刀归零值起始地址      */
 char   PLC_ADDR_REGRESS_L[]   = "R03030";  /* 线归零值起始地址      */
 
+char   PLC_ADDR_UNIT_ALL[]    = "R01980";  /* 刀线单位值统一值, 与刀1相同 */
 char   PLC_ADDR_UNIT_K[]      = "R01942";  /* 刀单位值起始地址      */
-char   PLC_ADDR_UNIT_L[]      = "R02108";  /* 线单位值起始地址      */
+char * PLC_ADDR_UNIT_L[]      = {          /* 线单位值起始地址      */
+                                  "R02108", "R02110", "R02112", "R02114", "R02116", 
+                                  "R02118", "R02120", "R02144", "R02148", "R02148",
+                                  "R02148", "R02148", "R02148", "R02148", "R02148",
+};
 char   PLC_ADDR_UNIT_P1[]     = "R01954";  /* 压深1单位值地址       */
-char   PLC_ADDR_UNIT_P2[]     = "R01956";  /* 压深2单位值地址       */
+char   PLC_ADDR_UNIT_P2[]     = "R01954";  /* 压深2单位值地址       */
 char   PLC_ADDR_UNIT_FAN[]    = "R01952";  /* 吸风单位值地址        */
 
 char   PLC_ADDR_FIX_K[]       = "R01928";  /* 刀+/-值起始地址       */
-char   PLC_ADDR_FIX_L[]       = "R02094";  /* 线+/-值起始地址       */
+char * PLC_ADDR_FIX_L[]       = {          /* 线+/-值起始地址       */
+                                  "R02094", "R02096", "R02098", "R02100", "R02102", 
+                                  "R02104", "R02106", "R02142", "R02148", "R02148",
+                                  "R02148", "R02148", "R02148", "R02148", "R02148",
+};
 char   PLC_ADDR_FIX_P1[]      = "R01940";  /* 压深1 +/-值地址       */
-char   PLC_ADDR_FIX_P2[]      = "R01942";  /* 压深2 +/-值地址       */
+char   PLC_ADDR_FIX_P2[]      = "R01940";  /* 压深2 +/-值地址       */
 char   PLC_ADDR_FIX_FAN[]     = "R01938";  /* 吸风  +/-值地址       */
 char   PLC_ADDR_FIX_BIG[]     = "R02260";  /* 粗启动+/-值地址       */
 
@@ -193,8 +209,8 @@ extern char   PLC_ADDR_ACT_PRESS1[];
 extern char   PLC_ADDR_ACT_PRESS2[];
 extern char   PLC_ADDR_ACT_FAN[];
 
-extern char   PLC_ADDR_ADJUST_K[];
-extern char   PLC_ADDR_ADJUST_L[];
+extern char * PLC_ADDR_ADJUST_K[];
+extern char * PLC_ADDR_ADJUST_L[];
 extern char   PLC_ADDR_ADJ_K_CFM[];
 extern char   PLC_ADDR_ADJ_L_CFM[];
 extern char   PLC_ADDR_ADJ_PRS1[];
@@ -207,14 +223,15 @@ extern char   PLC_ADDR_ADJ_FAN_CFM[];
 extern char   PLC_ADDR_REGRESS_K[];
 extern char   PLC_ADDR_REGRESS_L[];
 
+extern char   PLC_ADDR_UNIT_ALL[];
 extern char   PLC_ADDR_UNIT_K[];
-extern char   PLC_ADDR_UNIT_L[];
+extern char * PLC_ADDR_UNIT_L[];
 extern char   PLC_ADDR_UNIT_P1[];
 extern char   PLC_ADDR_UNIT_P2[];
 extern char   PLC_ADDR_UNIT_FAN[];
 
 extern char   PLC_ADDR_FIX_K[];
-extern char   PLC_ADDR_FIX_L[];
+extern char * PLC_ADDR_FIX_L[];
 extern char   PLC_ADDR_FIX_P1[];
 extern char   PLC_ADDR_FIX_P2[];
 extern char   PLC_ADDR_FIX_FAN[];

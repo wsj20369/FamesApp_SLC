@@ -272,7 +272,7 @@ void slc_read_act_value(int slc_index)
 /*-----------------------------------------------------------------------------------------
  * 函数:    slc_send_kl_act_value()
  *
- * 描述:    发送归零值给PLC
+ * 描述:    发送校正值给PLC
 **---------------------------------------------------------------------------------------*/
 void slc_send_kl_act_value(int slc_index)
 {
@@ -288,13 +288,15 @@ void slc_send_kl_act_value(int slc_index)
 
     slc = &config.slc[slc_index-1];
 
-    for(i = 0; i<slc->k_number; i++)
+    for(i = 0; i<slc->k_number; i++) {
         tmp[i] = (long)slc->kl_adjust.k_location[i];
-    ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_DR, PLC_ADDR_ADJUST_K, tmp, slc->k_number);
+        ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_DR, PLC_ADDR_ADJUST_K[i], &tmp[i], 1);
+    }
 
-    for(i = 0; i<slc->l_number; i++)
+    for(i = 0; i<slc->l_number; i++) {
         tmp[i] = (long)slc->kl_adjust.l_location[i];
-    ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_DR, PLC_ADDR_ADJUST_L, tmp, slc->l_number);
+        ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_DR, PLC_ADDR_ADJUST_L[i], &tmp[i], 1);
+    }
 
     for(i = 0; i < 32; i++)  /* 先置1  */
         ttt[i] = 1;
@@ -392,9 +394,10 @@ void slc_read_kl_unit_value(int slc_index)
     for(i = 0; i<slc->k_number; i++)
         slc->unit.k_unit[i] = (int)tmp[i];
 
-    for(i = 0; i<slc->l_number; i++)
+    for(i = 0; i<slc->l_number; i++) {
         tmp[i] = (long)slc->unit.l_unit[i];
-    ___slc_plc_rw(slc_index, FATEK_PLC_READ_DR, PLC_ADDR_UNIT_L, tmp, slc->l_number);
+        ___slc_plc_rw(slc_index, FATEK_PLC_READ_DR, PLC_ADDR_UNIT_L[i], &tmp[i], 1);
+    }
     for(i = 0; i<slc->l_number; i++)
         slc->unit.l_unit[i] = (int)tmp[i];
 }
@@ -417,13 +420,17 @@ void slc_send_kl_unit_value(int slc_index)
 
     slc = &config.slc[slc_index-1];
 
+    /*FIXME: 写一个总单位值, 这主要是为了与JY524兼容 */
+    ___slc_plc_rw(slc_index, FATEK_PLC_WRITE_DR, PLC_ADDR_UNIT_ALL, tmp, slc->k_number);
+
     for(i = 0; i<slc->k_number; i++)
         tmp[i] = (long)slc->unit.k_unit[i];
     ___slc_plc_rw(slc_index, FATEK_PLC_WRITE_DR, PLC_ADDR_UNIT_K, tmp, slc->k_number);
 
-    for(i = 0; i<slc->l_number; i++)
+    for(i = 0; i<slc->l_number; i++) {
         tmp[i] = (long)slc->unit.l_unit[i];
-    ___slc_plc_rw(slc_index, FATEK_PLC_WRITE_DR, PLC_ADDR_UNIT_L, tmp, slc->l_number);
+        ___slc_plc_rw(slc_index, FATEK_PLC_WRITE_DR, PLC_ADDR_UNIT_L[i], &tmp[i], 1);
+    }
 }
 
 /*-----------------------------------------------------------------------------------------
@@ -454,9 +461,10 @@ void slc_read_kl_fix_value(int slc_index)
         for(i = 0; i<slc->k_number; i++)
             slc->fix_set.k_fix_set[i] = (int)tmp[i];
 
-        for(i = 0; i<slc->l_number; i++)
+        for(i = 0; i<slc->l_number; i++) {
             tmp[i] = 0L;
-        plc_rw(slc_plc[slc_index], FATEK_PLC_READ_DR, PLC_ADDR_FIX_L, tmp, slc->l_number);
+            plc_rw(slc_plc[slc_index], FATEK_PLC_READ_DR, PLC_ADDR_FIX_L[i], &tmp[i], 1);
+        }
         for(i = 0; i<slc->l_number; i++)
             slc->fix_set.l_fix_set[i] = (int)tmp[i];
     }
@@ -488,9 +496,10 @@ void slc_send_kl_fix_value(int slc_index)
             tmp[i] = (long)slc->fix_set.k_fix_set[i];
         plc_rw(slc_plc[slc_index], FATEK_PLC_WRITE_DR, PLC_ADDR_FIX_K, tmp, slc->k_number);
 
-        for(i = 0; i<slc->l_number; i++)
+        for(i = 0; i<slc->l_number; i++) {
             tmp[i] = (long)slc->fix_set.l_fix_set[i];
-        plc_rw(slc_plc[slc_index], FATEK_PLC_WRITE_DR, PLC_ADDR_FIX_L, tmp, slc->l_number);
+            plc_rw(slc_plc[slc_index], FATEK_PLC_WRITE_DR, PLC_ADDR_FIX_L[i], &tmp[i], 1);
+        }
     }
 }
 

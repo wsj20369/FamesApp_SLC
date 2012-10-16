@@ -76,7 +76,6 @@ void __exit OnExit_for_Order(void)
 
 void InitOrderEnv(void)
 {
-    void OpenOrderFile(void);
     void * buf;
     
     buf = mem_alloc((INT32U)sizeof(order_header_t));
