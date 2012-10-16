@@ -19,6 +19,7 @@ struct slc_tmp_config_s {
     int cim_link;               /* 生管连线 */
     int auto_kl;                /* 刀线上下手自动 */
     int auto_yx;                /* 自动压型 */
+    int auto_fan;               /* 吸风自动(排单) */
 };
 
 #ifndef SLC_TMP_CONFIG_C

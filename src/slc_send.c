@@ -159,7 +159,9 @@ BOOL slc_send_order(int slc_index, order_struct * order)
             if(slc->kl_set.k_selected[i]){
                 fan = slc->kl_set.k_location[i];
                 slc->kl_set.fan_location = fan;
-                slc_send_fan_value(slc_index, fan); /* 吸风口位置设定值 */
+                if(tmp_config.auto_fan) {
+                    slc_send_fan_value(slc_index, fan); /* 吸风口位置设定值 */
+                }
                 break;
             }
         }

@@ -823,6 +823,21 @@ void cmd_main_YX_AUTO(void * data)
     }
 }
 
+void cmd_main_FAN_AUTO(void * data)
+{
+    data = data;
+    lock_kernel();
+    tmp_config.auto_fan = !tmp_config.auto_fan;
+    unlock_kernel();
+    save_tmp_config();
+    if(tmp_config.auto_fan){
+        gui_set_widget_color(main_buttons[4], COLOR_BLACK);
+        gui_set_widget_bkcolor(main_buttons[4], COLOR_GREEN);
+    } else {
+        gui_set_widget_color(main_buttons[4], BUTTON_COLOR);
+        gui_set_widget_bkcolor(main_buttons[4], BUTTON_BKCOLOR);
+    }
+}
 
 void cmd_main_ALT(void * data)
 {
@@ -866,10 +881,10 @@ INT08S *main_ctrl_functions_en[] = {
         "CIM-Link[F7]", "Quit[END]", NULL,
 };
 INT08S *main_alt_functions_zh[] = {
-        "系统参数[F1]", "楞别深浅[F2]", "自动下刀[F3]", "压型自动[F4]", "", "", "", "系统[F8]", NULL,
+        "系统参数[F1]", "楞别深浅[F2]", "自动下刀[F3]", "压型自动[F4]", "吸风自动[F5]", "", "", "系统[F8]", NULL,
 };
 INT08S *main_alt_functions_en[] = {
-        "Setup[F1]", "Deep[F2]", "Auto-KL[F3]", "Auto-Prs[F4]", "", "", "", "System[F8]", NULL,
+        "Setup[F1]", "Deep[F2]", "Auto-KL[F3]", "Auto-Prs[F4]", "Auto-Fan[F5]", "", "", "System[F8]", NULL,
 };
 INT08S *main_shift_functions_zh[] = {
         "PLC读写[F1]",  "I/O点[F2]", "故障检测[F3]", "连线串口[F4]", "", "版本号[F6]", "ID [F7]", "系统[F8]", NULL,
@@ -910,6 +925,10 @@ void set_buttons_caption_to_alt(void)
         gui_set_widget_color(main_buttons[3], COLOR_BLACK);
         gui_set_widget_bkcolor(main_buttons[3], COLOR_GREEN);
     }
+    if(tmp_config.auto_fan){
+        gui_set_widget_color(main_buttons[4], COLOR_BLACK);
+        gui_set_widget_bkcolor(main_buttons[4], COLOR_GREEN);
+    }
     set_buttons_caption(main_alt_functions);
 }
 
@@ -947,59 +966,59 @@ void cmd_main_NONE(void * data)
 button_cmd_t cmd_main[] = {
     #define __(x) (void*)(INT32U)(x)
    /* 主功能键     */
-    { F1,          0, cmd_input_order,  NULL,      "输入一笔新的订单, 但如果工号已经存在, 那就成为修改了!" },
-    { F2,          0, cmd_move_order,   NULL,      "调整订单的生产顺序" },
-    { F3,          0, cmd_remove_order, NULL,      "\"删除\"光标选中的订单!!!" },
-    { F4,          0, cmd_pack_workno,  NULL,      "重新排列订单的工号" },
-    { F5,          0, cmd_main_SEND,    __(1),     "将选中的订单送到机1" },
-    { F6,          0, cmd_main_SEND,    __(2),     "将选中的订单送到机2" },
-    { F7,          0, cmd_main_MONITOR, __(1),     "监控机1的刀线位置及上下状态" },
-    { F8,          0, cmd_main_MONITOR, __(2),     "监控机2的刀线位置及上下状态" },
+    { F1,          0, cmd_input_order,      NULL,      "输入一笔新的订单, 但如果工号已经存在, 那就成为修改了!" },
+    { F2,          0, cmd_move_order,       NULL,      "调整订单的生产顺序" },
+    { F3,          0, cmd_remove_order,     NULL,      "\"删除\"光标选中的订单!!!" },
+    { F4,          0, cmd_pack_workno,      NULL,      "重新排列订单的工号" },
+    { F5,          0, cmd_main_SEND,        __(1),     "将选中的订单送到机1" },
+    { F6,          0, cmd_main_SEND,        __(2),     "将选中的订单送到机2" },
+    { F7,          0, cmd_main_MONITOR,     __(1),     "监控机1的刀线位置及上下状态" },
+    { F8,          0, cmd_main_MONITOR,     __(2),     "监控机2的刀线位置及上下状态" },
    /* 订单浏览     */
-    { UP,          0, cmd_main_browse,  __(UP),    "" },
-    { DOWN,        0, cmd_main_browse,  __(DOWN),  "" },
-    { PGUP,        0, cmd_main_browse,  __(PGUP),  "" },
-    { PGDN,        0, cmd_main_browse,  __(PGDN),  "" },
-    { HOME,        0, cmd_main_browse,  __(HOME),  "" },
-    { END,         0, cmd_main_browse,  __(END),   "" },
+    { UP,          0, cmd_main_browse,      __(UP),    "" },
+    { DOWN,        0, cmd_main_browse,      __(DOWN),  "" },
+    { PGUP,        0, cmd_main_browse,      __(PGUP),  "" },
+    { PGDN,        0, cmd_main_browse,      __(PGDN),  "" },
+    { HOME,        0, cmd_main_browse,      __(HOME),  "" },
+    { END,         0, cmd_main_browse,      __(END),   "" },
    /* NONE_KEY     */
-    { NONE_KEY,    0, cmd_main_NONE,    NULL,      "" },
+    { NONE_KEY,    0, cmd_main_NONE,        NULL,      "" },
    /* CTRL-F#      */
-    { CTRL,        0, cmd_main_CTRL,    NULL,      "" },
-    { CTRL_F1,     0, cmd_main_PARAM,   __(1),     "机1参数设置, 主要是刀线限位设置" },
-    { CTRL_F2,     0, cmd_main_PARAM,   __(2),     "机2参数设置, 主要是刀线限位设置" },
-    { CTRL_F3,     0, NULL            , NULL,      "" },
-    { CTRL_F4,     0, cmd_main_WHET,    __(1),     "机1磨刀设置" },
-    { CTRL_F5,     0, cmd_main_WHET,    __(2),     "机2磨刀设置" },
-    { CTRL_F6,     0, NULL            , NULL,      "" },
-    { CTRL_F7,     0, cmd_main_CIM,     NULL,      "生管连线功能, 绿色表示已启用" },
-    { CTRL_END,    0, cmd_main_QUIT   , NULL,      "退出分压机程序" },
+    { CTRL,        0, cmd_main_CTRL,        NULL,      "" },
+    { CTRL_F1,     0, cmd_main_PARAM,       __(1),     "机1参数设置, 主要是刀线限位设置" },
+    { CTRL_F2,     0, cmd_main_PARAM,       __(2),     "机2参数设置, 主要是刀线限位设置" },
+    { CTRL_F3,     0, NULL            ,     NULL,      "" },
+    { CTRL_F4,     0, cmd_main_WHET,        __(1),     "机1磨刀设置" },
+    { CTRL_F5,     0, cmd_main_WHET,        __(2),     "机2磨刀设置" },
+    { CTRL_F6,     0, NULL            ,     NULL,      "" },
+    { CTRL_F7,     0, cmd_main_CIM,         NULL,      "生管连线功能, 绿色表示已启用" },
+    { CTRL_END,    0, cmd_main_QUIT   ,     NULL,      "退出分压机程序" },
    /* ALT-F#       */
-    { ALT,         0, cmd_main_ALT,     NULL,      "" },
-    { ALT_F1,      0, setup_slc_param,  NULL,      "系统参数的设置, 只有管理员才可修改" },
-    { ALT_F2,      0, cmd_main_LB,      NULL,      "楞别深浅设置" },
-    { ALT_F3,      0, cmd_main_KL_AUTO, NULL,      "定位完成后, 是否要自动下刀, 绿色为自动" },
-    { ALT_F4,      0, cmd_main_YX_AUTO, NULL,      "压型手/自动切换, 绿色为自动" },
-    { ALT_F5,      0, NULL            , NULL,      "" },
-    { ALT_F6,      0, NULL            , NULL,      "" },
-    { ALT_F7,      0, NULL            , NULL,      "" },
-    { ALT_F8,      0, cmd_main_SYS,     NULL,      "System Monitor" },
+    { ALT,         0, cmd_main_ALT,         NULL,      "" },
+    { ALT_F1,      0, setup_slc_param,      NULL,      "系统参数的设置, 只有管理员才可修改" },
+    { ALT_F2,      0, cmd_main_LB,          NULL,      "楞别深浅设置" },
+    { ALT_F3,      0, cmd_main_KL_AUTO,     NULL,      "定位完成后, 是否要自动下刀, 亮绿色为自动" },
+    { ALT_F4,      0, cmd_main_YX_AUTO,     NULL,      "压型手/自动切换, 亮绿色为自动" },
+    { ALT_F5,      0, cmd_main_FAN_AUTO,    NULL,      "吸风手/自动切换, 亮绿色为自动" },
+    { ALT_F6,      0, NULL            ,     NULL,      "" },
+    { ALT_F7,      0, NULL            ,     NULL,      "" },
+    { ALT_F8,      0, cmd_main_SYS,         NULL,      "System Monitor" },
    /* SHIFT-F#     */
-    { SHIFT,       0, cmd_main_SHIFT,   NULL,      "" },
-    { SHIFT_F1,    0, cmd_plc_mntr,     NULL,      "PLC暂存器的监控, 用于调试"  },
-    { SHIFT_F2,    0, cmd_plc_io_mntr,  NULL,      "PLC I/O点的监控, 用于调试[ESC返回]" },
-    { SHIFT_F3,    0, cmd_slc_MALF,     NULL,      "分压机故障检测" },
-    { SHIFT_F4,    0, cmd_cim_monitor,  NULL,      "监控生管连线串口所收发的数据[ESC返回]" },
-    { SHIFT_F5,    0, NULL            , NULL,      "" },
-    { SHIFT_F6,    0, cmd_main_VER,     NULL,      "" },
-    { SHIFT_F7,    0, cmd_main_ID,      __(0),     "System ID/SN" },
-    { SHIFT_F8,    0, cmd_main_SYS,     NULL,      "System Monitor" },
+    { SHIFT,       0, cmd_main_SHIFT,       NULL,      "" },
+    { SHIFT_F1,    0, cmd_plc_mntr,         NULL,      "PLC暂存器的监控, 用于调试"  },
+    { SHIFT_F2,    0, cmd_plc_io_mntr,      NULL,      "PLC I/O点的监控, 用于调试[ESC返回]" },
+    { SHIFT_F3,    0, cmd_slc_MALF,         NULL,      "分压机故障检测" },
+    { SHIFT_F4,    0, cmd_cim_monitor,      NULL,      "监控生管连线串口所收发的数据[ESC返回]" },
+    { SHIFT_F5,    0, NULL            ,     NULL,      "" },
+    { SHIFT_F6,    0, cmd_main_VER,         NULL,      "" },
+    { SHIFT_F7,    0, cmd_main_ID,          __(0),     "System ID/SN" },
+    { SHIFT_F8,    0, cmd_main_SYS,         NULL,      "System Monitor" },
    /* 注册退出键   */
-    { RS_EXIT_KEY, 0, cmd_main_ID,      __(1),     "System ID/SN" },
+    { RS_EXIT_KEY, 0, cmd_main_ID,          __(1),     "System ID/SN" },
    /* 测试用       */
-    { SHIFT|CTRL,  0, cmd_main_SYS,     NULL,      "" },
-    { 0x1900,      0, cmd_main_PALETTE, NULL,      "ALT-P, Display System Palette" },
-    { ESC,         0, NULL            , NULL,      "提示: 如果您累了, 就要休息休息! 祝您工作顺利, 笑口常开!" },
+    { SHIFT|CTRL,  0, cmd_main_SYS,         NULL,      "" },
+    { 0x1900,      0, cmd_main_PALETTE,     NULL,      "ALT-P, Display System Palette" },
+    { ESC,         0, NULL            ,     NULL,      "提示: 如果您累了, 就要休息休息! 祝您工作顺利, 笑口常开!" },
    /* 结束标志     */
     { NONEKEY, },
     #undef __
