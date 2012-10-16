@@ -1927,6 +1927,7 @@ void enter_slc_monitor(int machine)
         plc_action_enable_id(slc_plc[machine], id_read_act_p1);
         plc_action_enable_id(slc_plc[machine], id_read_act_p2);
         plc_action_enable_id(slc_plc[machine], id_read_act_fan);
+        plc_action_enable_id(slc_plc[machine], id_read_speed);
     }
 
     for(;;){
@@ -1939,6 +1940,7 @@ void enter_slc_monitor(int machine)
                     plc_action_disable_id(slc_plc[machine], id_read_act_p1);
                     plc_action_disable_id(slc_plc[machine], id_read_act_p2);
                     plc_action_disable_id(slc_plc[machine], id_read_act_fan);
+                    plc_action_disable_id(slc_plc[machine], id_read_speed);
                 }
                 return;
             case F1:

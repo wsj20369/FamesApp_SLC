@@ -10,6 +10,7 @@
 
 #include <string.h>
 
+#include "cfg_defs.h"
 #include "reg_core.h"
 #include "slc_reg.h"
 #include "passwd.h"

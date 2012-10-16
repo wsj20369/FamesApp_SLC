@@ -1478,8 +1478,8 @@ void dpc_for_main(void * d, INT16S nr)
                     gui_set_widget_bkcolor(slc_1_status, 0);
                 }
             }
-            if(timeout >= 20){ /* PLC断线2秒钟就开始警告 */
-                timeout = 20;
+            if(timeout >= CONFIG_PLC_CONNECT_TIMEOUT){ /* PLC断线超时开始警告 */
+                timeout = CONFIG_PLC_CONNECT_TIMEOUT;
                 if(!disconnected){
                     gui_set_widget_color(slc_1_status, 0);
                     gui_set_widget_bkcolor(slc_1_status, COLOR_WARNING);
@@ -1545,8 +1545,8 @@ void dpc_for_main(void * d, INT16S nr)
                     gui_set_widget_bkcolor(slc_2_status, 0);
                 }
             }
-            if(timeout >= 20){ /* PLC断线2秒钟就开始警告 */
-                timeout = 20;
+            if(timeout >= CONFIG_PLC_CONNECT_TIMEOUT){ /* PLC断线超时开始警告 */
+                timeout = CONFIG_PLC_CONNECT_TIMEOUT;
                 if(!disconnected){
                     gui_set_widget_color(slc_2_status, 0);
                     gui_set_widget_bkcolor(slc_2_status, COLOR_WARNING);
@@ -1737,13 +1737,17 @@ void start_main_loop(void)
 
     if(config.slc_used & 1){
         set_plc_on_startup(1);
+        #if CONFIG_SEND_ORDER_ON_STARTUP
         if(GetOrderForView(&order, i++))
             slc_send_order(1, &order);
+        #endif
     }
     if(config.slc_used & 2){
         set_plc_on_startup(2);
+        #if CONFIG_SEND_ORDER_ON_STARTUP
         if(GetOrderForView(&order, i++))
             slc_send_order(2, &order);
+        #endif
     }
 
     main_default_functions = pick_string(main_default_functions_zh, main_default_functions_en);
