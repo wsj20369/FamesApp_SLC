@@ -198,7 +198,7 @@ INPUT_DIALOG_ITEM("语言选择:",   __slc_language,    1,  ___X+10,  ___Y+56,  180,
 /* 紫色背景
 INPUT_DIALOG_SET(slc_global_param_dialog, "分压机系统参数", &icon, 22, 96, 972, 540, 189, 66, 1, FORM_STYLE_XP_BORDER|FORM_STYLE_TITLE)
 */
-INPUT_DIALOG_SET(slc_global_param_dialog, "分压机系统参数", &icon, 22, 96, 972, 540, 70, WIDGET_BKCOLOR, 1, FORM_STYLE_XP_BORDER|FORM_STYLE_TITLE)
+INPUT_DIALOG_SET(slc_global_param_dialog, "分压机系统参数", &icon, 22, 96, 972, 540, 70, WIDGET_BKCOLOR, CONFIG_FONT_16, FORM_STYLE_XP_BORDER|FORM_STYLE_TITLE)
 DECLARE_INPUT_DIALOG_ENDED(slc_global_param_dialog);
 
 gui_widget * init_slc_global_param_dlg(void)

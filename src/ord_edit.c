@@ -31,16 +31,31 @@ enum {
 };
 
 /* ¶©µ¥±à¼­¶Ô»°¿òµÄ¶¨Òå */
+#if CONFIG_INPUT_ORDER_FONT24 == 1
+
+DECLARE_INPUT_DIALOG_START(edit_order_dialog)
+INPUT_DIALOG_ITEM("¹¤ºÅ:", ORD_EDIT_WKNO,  4,  40,  42,  206, 36, CONFIG_FONT_24, 0, "")
+INPUT_DIALOG_ITEM("µ¥ºÅ:", ORD_EDIT_ORDNO, 8,  276, 42,  206, 36, CONFIG_FONT_24, 0, "")
+INPUT_DIALOG_ITEM("ÆÊÊý:", ORD_EDIT_CUTS,  2,  40,  92,  206, 36, CONFIG_FONT_24, 0, "")
+INPUT_DIALOG_ITEM("Ñ¹Ïß:", ORD_EDIT_DATA,  48, 40,  142, 678, 36, CONFIG_FONT_24, 0, "")
+INPUT_DIALOG_ITEM("Ñ¹ÐÍ:", ORD_EDIT_YX,    1,  276, 92,  206, 36, CONFIG_FONT_24, 0, "")
+INPUT_DIALOG_ITEM("Àã±ð:", ORD_EDIT_FLUTE, 3,  512, 42,  206, 36, CONFIG_FONT_24, 0, "")
+INPUT_DIALOG_ITEM("ÐÞ±ß:", ORD_EDIT_TIRM,  1,  512, 92,  206, 36, CONFIG_FONT_24, 0, "")
+INPUT_DIALOG_SET(edit_order_dialog, "¶©µ¥±à¼­", &icon, 110, 348, 808, 268, 0, 236, CONFIG_FONT_16, FORM_STYLE_XP_BORDER|FORM_STYLE_TITLE)
+DECLARE_INPUT_DIALOG_ENDED(edit_order_dialog);
+
+#else /* Ä¬ÈÏÓÃµÄÊÇ16ºÅ×ÖÌå */
+
 #if 1       /* Ñ¹ÏßÔÚ×îÏÂÃæÒ»ÐÐ */
 DECLARE_INPUT_DIALOG_START(edit_order_dialog)
-INPUT_DIALOG_ITEM("¹¤ºÅ:", ORD_EDIT_WKNO,  4,  40,  38,  196, 28, 1, 0, "")
-INPUT_DIALOG_ITEM("µ¥ºÅ:", ORD_EDIT_ORDNO, 8,  256, 38,  196, 28, 1, 0, "")
-INPUT_DIALOG_ITEM("ÆÊÊý:", ORD_EDIT_CUTS,  2,  40,  72,  196, 28, 1, 0, "")
-INPUT_DIALOG_ITEM("Ñ¹Ïß:", ORD_EDIT_DATA,  64, 40,  106, 628, 28, 1, 0, "")
-INPUT_DIALOG_ITEM("Ñ¹ÐÍ:", ORD_EDIT_YX,    1,  256, 72,  196, 28, 1, 0, "")
-INPUT_DIALOG_ITEM("Àã±ð:", ORD_EDIT_FLUTE, 3,  472, 38,  196, 28, 1, 0, "")
-INPUT_DIALOG_ITEM("ÐÞ±ß:", ORD_EDIT_TIRM,  1,  472, 72,  196, 28, 1, 0, "")
-INPUT_DIALOG_SET(edit_order_dialog, "¶©µ¥±à¼­", &icon, 140, 418, 738, 221, 0, 236, 1, FORM_STYLE_XP_BORDER|FORM_STYLE_TITLE)
+INPUT_DIALOG_ITEM("¹¤ºÅ:", ORD_EDIT_WKNO,  4,  40,  38,  196, 28, CONFIG_FONT_16, 0, "")
+INPUT_DIALOG_ITEM("µ¥ºÅ:", ORD_EDIT_ORDNO, 8,  256, 38,  196, 28, CONFIG_FONT_16, 0, "")
+INPUT_DIALOG_ITEM("ÆÊÊý:", ORD_EDIT_CUTS,  2,  40,  72,  196, 28, CONFIG_FONT_16, 0, "")
+INPUT_DIALOG_ITEM("Ñ¹Ïß:", ORD_EDIT_DATA,  64, 40,  106, 628, 28, CONFIG_FONT_16, 0, "")
+INPUT_DIALOG_ITEM("Ñ¹ÐÍ:", ORD_EDIT_YX,    1,  256, 72,  196, 28, CONFIG_FONT_16, 0, "")
+INPUT_DIALOG_ITEM("Àã±ð:", ORD_EDIT_FLUTE, 3,  472, 38,  196, 28, CONFIG_FONT_16, 0, "")
+INPUT_DIALOG_ITEM("ÐÞ±ß:", ORD_EDIT_TIRM,  1,  472, 72,  196, 28, CONFIG_FONT_16, 0, "")
+INPUT_DIALOG_SET(edit_order_dialog, "¶©µ¥±à¼­", &icon, 140, 388, 738, 221, 0, 236, CONFIG_FONT_16, FORM_STYLE_XP_BORDER|FORM_STYLE_TITLE)
 DECLARE_INPUT_DIALOG_ENDED(edit_order_dialog);
 #else       /* Ñ¹ÏßÔÚÖÐ¼äÒ»ÐÐ */
 DECLARE_INPUT_DIALOG_START(edit_order_dialog)
@@ -51,9 +66,11 @@ INPUT_DIALOG_ITEM("Ñ¹Ïß:", ORD_EDIT_DATA,  64, 40,  72,  628, 28, 1, 0, "Ñ¹Ïß×ÊÁ
 INPUT_DIALOG_ITEM("Ñ¹ÐÍ:", ORD_EDIT_YX,    1,  40,  106, 196, 28, 1, 0, "Ñ¹ÐÍ, 1~9")
 INPUT_DIALOG_ITEM("Àã±ð:", ORD_EDIT_FLUTE, 3,  256, 106, 196, 28, 1, 0, "Àã±ð")
 INPUT_DIALOG_ITEM("ÐÞ±ß:", ORD_EDIT_TIRM,  1,  472, 106, 196, 28, 1, 0, "1=ÐÞ±ß, 0=²»ÐÞ")
-INPUT_DIALOG_SET(edit_order_dialog, "Êäµ¥", &icon, 140, 418, 738, 221, 0, 236, 1, FORM_STYLE_XP_BORDER|FORM_STYLE_TITLE)
+INPUT_DIALOG_SET(edit_order_dialog, "Êäµ¥", &icon, 140, 388, 738, 221, 0, 236, 1, FORM_STYLE_XP_BORDER|FORM_STYLE_TITLE)
 DECLARE_INPUT_DIALOG_ENDED(edit_order_dialog);
 #endif
+
+#endif /* CONFIG_INPUT_ORDER_FONT24 */
 
 /*-----------------------------------------------------------------------------------------
  *          

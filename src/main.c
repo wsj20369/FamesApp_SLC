@@ -194,7 +194,7 @@ void init_main_screen(void)
         getch();
         ExitApplication();
     }
-    order_shouldbe_preview = gui_create_widget(preview_id, 10, 422, 998, 226, atoi(___color_preview), atoi(___bkcolor_preview), 1, PREVIEW_STYLE_CLIENT_BDR|PREVIEW_STYLE_MODAL_FRAME);
+    order_shouldbe_preview = gui_create_widget(preview_id, 10, 422, 998, 226, atoi(___color_preview), atoi(___bkcolor_preview), font16, PREVIEW_STYLE_CLIENT_BDR|PREVIEW_STYLE_MODAL_FRAME);
     if(!order_shouldbe_preview)
         goto some_error;
     gui_widget_link(main_screen, order_shouldbe_preview);
@@ -404,7 +404,9 @@ void cmd_input_order(void * data)
     if(input_order_screen){
         gui_hide_widget(order_shouldbe_preview);
         gui_hide_widget(dashedline_in_main);
+        gui_hide_widget(main_order_view);
         order_edit();
+        gui_show_widget(main_order_view);
         gui_show_widget(dashedline_in_main);
         gui_show_widget(order_shouldbe_preview);
     } else {

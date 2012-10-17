@@ -47,7 +47,7 @@ gui_widget * init_misc_param_dlg(void);
 gui_widget * init_slc_param_screen(void)
 {
     /* 主界面       */
-    __slc_param_screen = gui_create_widget(GUI_WIDGET_FORM, 1, 1, 1021, 765, 0, 0, 0, FORM_STYLE_XP_BORDER|FORM_STYLE_TITLE);
+    __slc_param_screen = gui_create_widget(GUI_WIDGET_FORM, 1, 1, 1021, 765, 0, 0, font16, FORM_STYLE_XP_BORDER|FORM_STYLE_TITLE);
     if(!__slc_param_screen)
         goto some_error;
     gui_widget_link(NULL, __slc_param_screen);      /* 设置主界面背景 */

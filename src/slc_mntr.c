@@ -89,7 +89,7 @@ gui_widget * init_slc_monitor_screen(void)
     KL_BORDER_COLOR =  (COLOR)atoi(___s);
     
     /* 主界面       */
-    slc_mntr_screen = gui_create_widget(GUI_WIDGET_FORM, 1, 1, 1021, 765, 0, 0, 0, FORM_STYLE_XP_BORDER|FORM_STYLE_TITLE);
+    slc_mntr_screen = gui_create_widget(GUI_WIDGET_FORM, 1, 1, 1021, 765, 0, 0, font16, FORM_STYLE_XP_BORDER|FORM_STYLE_TITLE);
     if(!slc_mntr_screen)
         goto some_error;
     gui_widget_link(NULL, slc_mntr_screen);      /* 设置主界面背景 */

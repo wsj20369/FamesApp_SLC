@@ -427,7 +427,7 @@ void __widget_preview_draw(gui_widget * preview)
                         gdi_draw_v_line(_x, y, y+19, t->preview_marker_color);
                         if(i>0){
                             ___draw_width_mark(__x, _x, y, 20, (k_data[i]-__last), 
-                                               0, t->preview_marker_color, bkcolor);
+                                               1, t->preview_marker_color, bkcolor);
                             gdi_draw_box(__x+1, _y, _x-1, _y1, t->preview_paper_color);
                         }
                         __x = _x; /* __x记录了_x上一次的值 */
