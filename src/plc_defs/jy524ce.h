@@ -88,14 +88,14 @@ char * PLC_ADDR_FINE_TUNE_L[] = { /* 线微调启动 */
 char   PLC_ADDR_FINE_TUNE[]   = "M0680";   /* 刀线微调总启动        */
 char   PLC_ADDR_YX[]          = "M0750";   /* 压型起始地址          */
 char   PLC_ADDR_SET_PRESS1[]  = "R01926";  /* 前压设定值            */
-char   PLC_ADDR_SET_PRESS2[]  = "R01926";  /* 后压设定值            */
-char   PLC_ADDR_SET_FAN[]     = "R01924";  /* 吸风口设定值          */
+char   PLC_ADDR_SET_PRESS2[]  = "R01924";  /* 后压设定值            */
+char   PLC_ADDR_SET_FAN[]     = "R03600";  /* 吸风口设定值          */
 
 char   PLC_ADDR_ACT_VALUE_K[] = "R02750";  /* 刀实际值起始地址      */
 char   PLC_ADDR_ACT_VALUE_L[] = "R02764";  /* 线实际值起始地址      */
 char   PLC_ADDR_ACT_PRESS1[]  = "R01912";  /* 前压实际值            */
-char   PLC_ADDR_ACT_PRESS2[]  = "R01912";  /* 后压实际值            */
-char   PLC_ADDR_ACT_FAN[]     = "R01910";  /* 吸风口实际值          */
+char   PLC_ADDR_ACT_PRESS2[]  = "R01910";  /* 后压实际值            */
+char   PLC_ADDR_ACT_FAN[]     = "R00148";  /* 吸风口实际值          */
 
 char   PLC_ADDR_ADJ_K_CFM[]   = "M0167";   /* 刀校正确认值起始地址  */
 char * PLC_ADDR_ADJUST_K[]    = {          /* 刀校正值起始地址      */
@@ -110,10 +110,10 @@ char * PLC_ADDR_ADJUST_L[]    = {          /* 线校正值起始地址      */
 };
 char   PLC_ADDR_ADJ_PRS1[]    = "R01966";  /* 压深1校正值地址       */
 char   PLC_ADDR_ADJ_P1_CFM[]  = "M0172";   /* 压深1校正确认值地址   */
-char   PLC_ADDR_ADJ_PRS2[]    = "R01966";  /* 压深2校正值地址       */
-char   PLC_ADDR_ADJ_P2_CFM[]  = "M0172";   /* 压深1校正确认值地址   */
-char   PLC_ADDR_ADJ_FAN[]     = "R01968";  /* 吸风校正值地址        */
-char   PLC_ADDR_ADJ_FAN_CFM[] = "M0173";   /* 吸风校正确认值地址    */
+char   PLC_ADDR_ADJ_PRS2[]    = "R01968";  /* 压深2校正值地址       */
+char   PLC_ADDR_ADJ_P2_CFM[]  = "M0173";   /* 压深2校正确认值地址   */
+char   PLC_ADDR_ADJ_FAN[]     = "R03600";  /* 吸风校正值地址        */
+char   PLC_ADDR_ADJ_FAN_CFM[] = "M0800";   /* 吸风校正确认值地址    */
 
 char   PLC_ADDR_ADJ_YX[]      = "R01970";  /* 压型校正值地址        */ /*FIXME: 暂时没有用到  */
 char   PLC_ADDR_ADJ_YX_CFM[]  = "M0174";   /* 压型校正确认值地址    */
@@ -129,8 +129,8 @@ char * PLC_ADDR_UNIT_L[]      = {          /* 线单位值起始地址      */
                                   "R02148", "R02148", "R02148", "R02148", "R02148",
 };
 char   PLC_ADDR_UNIT_P1[]     = "R01954";  /* 压深1单位值地址       */
-char   PLC_ADDR_UNIT_P2[]     = "R01954";  /* 压深2单位值地址       */
-char   PLC_ADDR_UNIT_FAN[]    = "R01952";  /* 吸风单位值地址        */
+char   PLC_ADDR_UNIT_P2[]     = "R01952";  /* 压深2单位值地址       */
+char   PLC_ADDR_UNIT_FAN[]    = "R03600";  /* 吸风单位值地址        */
 
 char   PLC_ADDR_FIX_K[]       = "R01928";  /* 刀+/-值起始地址       */
 char * PLC_ADDR_FIX_L[]       = {          /* 线+/-值起始地址       */
@@ -139,18 +139,19 @@ char * PLC_ADDR_FIX_L[]       = {          /* 线+/-值起始地址       */
                                   "R02148", "R02148", "R02148", "R02148", "R02148",
 };
 char   PLC_ADDR_FIX_P1[]      = "R01940";  /* 压深1 +/-值地址       */
-char   PLC_ADDR_FIX_P2[]      = "R01940";  /* 压深2 +/-值地址       */
-char   PLC_ADDR_FIX_FAN[]     = "R01938";  /* 吸风  +/-值地址       */
+char   PLC_ADDR_FIX_P2[]      = "R01938";  /* 压深2 +/-值地址       */
+char   PLC_ADDR_FIX_FAN[]     = "R03500";  /* 吸风  +/-值地址       */
+
 char   PLC_ADDR_FIX_BIG[]     = "R02260";  /* 粗启动+/-值地址       */
 
-char   PLC_ADDR_K_BIG_FIX[]   = "R02000";  /* 刀粗定位地址          */
-char   PLC_ADDR_K_SML_FIX[]   = "R02002";  /* 刀细定位地址          */
-char   PLC_ADDR_L_BIG_FIX[]   = "R02004";  /* 线粗定位地址          */
-char   PLC_ADDR_L_SML_FIX[]   = "R02006";  /* 线细定位地址          */
-char   PLC_ADDR_P_BIG_FIX[]   = "R02008";  /* 压深粗定位地址        */
-char   PLC_ADDR_P_SML_FIX[]   = "R02010";  /* 压深细定位地址        */
-char   PLC_ADDR_F_BIG_FIX[]   = "R02012";  /* 吸风粗定位地址        */
-char   PLC_ADDR_F_SML_FIX[]   = "R02014";  /* 吸风细定位地址        */
+char   PLC_ADDR_K_BIG_FIX[]   = "R02260";  /* 刀粗定位地址          */
+char   PLC_ADDR_K_SML_FIX[]   = "R03600";  /* 刀细定位地址          */
+char   PLC_ADDR_L_BIG_FIX[]   = "R02260";  /* 线粗定位地址          */
+char   PLC_ADDR_L_SML_FIX[]   = "R03600";  /* 线细定位地址          */
+char   PLC_ADDR_P_BIG_FIX[]   = "R02262";  /* 压深粗定位地址        */
+char   PLC_ADDR_P_SML_FIX[]   = "R03600";  /* 压深细定位地址        */
+char   PLC_ADDR_F_BIG_FIX[]   = "R03600";  /* 吸风粗定位地址        */
+char   PLC_ADDR_F_SML_FIX[]   = "R03600";  /* 吸风细定位地址        */
 
 char   PLC_ADDR_MALFUNCTION[] = "WM1000";  /* 故障代码起始地址      */
 
