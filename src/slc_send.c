@@ -84,11 +84,15 @@ some_error:
 /*-----------------------------------------------------------------------------------------
  * 函数:    slc_send_order()
  *
+ * 参数:    slc_index       分压机序号, 1 = SLC1, 2 = SLC2
+ *          order           订单数据
+ *          no_control      1 = 不发送刀线抬落信号与启动信号, 0 = 发送
+ *
  * 描述:    传送订单到分压机(设定值)
  *
  * 说明:    由于此函数有可能被多个任务同时执行, 所以需要互斥处理(___lock)
 **---------------------------------------------------------------------------------------*/
-BOOL slc_send_order(int slc_index, order_struct * order)
+BOOL slc_send_order(int slc_index, order_struct * order, int no_control)
 {
     slc_descriptor_t * slc;
     char x_buf[1024], ___s[128];
@@ -165,8 +169,11 @@ BOOL slc_send_order(int slc_index, order_struct * order)
                 break;
             }
         }
-        slc_kl_up_set(slc_index); /* 刀线上 */
-        slc_send_start(slc_index); /* 启动 */
+
+        if (!no_control) {
+            slc_kl_up_set(slc_index); /* 刀线上 */
+            slc_send_start(slc_index); /* 启动 */
+        }
 
         /* 保存订单到描述符 */
         slc->working = *order;

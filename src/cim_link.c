@@ -688,7 +688,7 @@ static void __daemon cim_link_daemon(void * data)
                             if(i >= 1){
                                 if(similar_order(&order, &(config.slc[sendport-1].working)))
                                     break; /* 本来就是一样的, 不需要发送 */
-                                if(slc_send_order(sendport, &order)){
+                                if(slc_send_order(sendport, &order, 0)){
                                     slc_kl_up_set(sendport);
                                     slc_send_start(sendport);
                                 }

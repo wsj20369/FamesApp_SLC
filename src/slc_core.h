@@ -229,6 +229,7 @@ struct slc_descriptor_s {
     order_struct working;               /* 本机的当前定单     */
     #endif
     order_kl_info_t order_kl;           /* 订单的刀线信息结构 */
+    int    speed_scale;                 /* 上位机的车速比率   */
     void * private_data;                /* 某分压机的特有数据 */
 };
 
@@ -365,6 +366,7 @@ static slc_descriptor_t __default_slc = {
     INIT_order_struct,                  /* 本机的当前定单     */
     #endif
     {{0,},0,{0,},0,0},                  /* 订单的刀线信息结构 */
+    10,                                /* 上位机车速比率 */
     NULL                                /* 某分压机的特有数据 */
 };
 #endif

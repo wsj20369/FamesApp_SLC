@@ -496,7 +496,7 @@ void cmd_main_SEND(void * data)
         old_y = send_screen->rect.y;
         unlock_kernel();
         gui_set_widget_location(send_screen, 160, 429);
-        slc_send_order(machine+1, &order);
+        slc_send_order(machine+1, &order, 0);
         gui_set_widget_location(send_screen, old_x, old_y);
     }
 }
@@ -864,6 +864,29 @@ void cmd_main_SHIFT(void * data)
  *      主画面之按键的定义
  * 
 **---------------------------------------------------------------------------------------*/
+#if CONFIG_FUNC_BUTTON_BIGFONT == 1
+
+INT08S *main_default_functions_zh[] = {
+        "输单 F1", "调单 F2", "删单 F3", "重排 F4", "强送1 F5", "强送2 F6",
+        "监控1 F7", "监控2 F8", NULL,
+};
+INT08S *main_default_functions_en[] = {
+        "Input[F1]", "Move[F2]", "Del[F3]", "Resort[F4]", "M1-Sd[F5]", "M2-Sd[F6]",
+        "M1-Mr[F7]", "M2-Mr[F8]", NULL,
+};
+INT08S *main_ctrl_functions_zh[] = {
+        "参数1 F1", "参数2 F2", "",
+        "磨刀1 F4", "磨刀2 F5", "",
+        "生管 F7", "退出 END", NULL,
+};
+INT08S *main_ctrl_functions_en[] = {
+        "Setup1[F1]", "Setup2[F2]", "",
+        "Whet1[F4]",  "Whet2[F5]", "",
+        "MIS[F7]", "Quit[END]", NULL,
+};
+
+#else
+
 INT08S *main_default_functions_zh[] = {
         "输单[F1]", "调单[F2]", "删单[F3]", "重排[F4]", "机1强送[F5]", "机2强送[F6]",
         "机1监控[F7]", "机2监控[F8]", NULL,
@@ -882,6 +905,9 @@ INT08S *main_ctrl_functions_en[] = {
         "M1-Whet[F4]",  "M2-Whet[F5]", "",
         "CIM-Link[F7]", "Quit[END]", NULL,
 };
+
+#endif
+
 INT08S *main_alt_functions_zh[] = {
         "系统参数[F1]", "楞别深浅[F2]", "自动下刀[F3]", "压型自动[F4]", "吸风自动[F5]", "", "", "系统[F8]", NULL,
 };
@@ -908,6 +934,9 @@ void set_buttons_caption_to_default(void)
     for(i=0; i<main_buttons_max; i++){
         gui_set_widget_color(main_buttons[i], BUTTON_COLOR);
         gui_set_widget_bkcolor(main_buttons[i], BUTTON_BKCOLOR);
+        #if CONFIG_FUNC_BUTTON_BIGFONT == 1
+        gui_set_widget_font(main_buttons[i], font24);
+        #endif
     }
     set_buttons_caption(main_default_functions);
 }
@@ -918,6 +947,9 @@ void set_buttons_caption_to_alt(void)
     for(i=0; i<main_buttons_max; i++){
         gui_set_widget_color(main_buttons[i], BUTTON_COLOR);
         gui_set_widget_bkcolor(main_buttons[i], BUTTON_BKCOLOR);
+        #if CONFIG_FUNC_BUTTON_BIGFONT == 1
+        gui_set_widget_font(main_buttons[i], font16);
+        #endif
     }
     if(tmp_config.auto_kl){
         gui_set_widget_color(main_buttons[2], COLOR_BLACK);
@@ -940,6 +972,9 @@ void set_buttons_caption_to_ctrl(void)
     for(i=0; i<main_buttons_max; i++){
         gui_set_widget_color(main_buttons[i], BUTTON_COLOR);
         gui_set_widget_bkcolor(main_buttons[i], BUTTON_BKCOLOR);
+        #if CONFIG_FUNC_BUTTON_BIGFONT == 1
+        gui_set_widget_font(main_buttons[i], font24);
+        #endif
     }
     if(tmp_config.cim_link){
         gui_set_widget_color(main_buttons[6], COLOR_BLACK);
@@ -954,6 +989,9 @@ void set_buttons_caption_to_shift(void)
     for(i=0; i<main_buttons_max; i++){
         gui_set_widget_color(main_buttons[i], BUTTON_COLOR);
         gui_set_widget_bkcolor(main_buttons[i], BUTTON_BKCOLOR);
+        #if CONFIG_FUNC_BUTTON_BIGFONT == 1
+        gui_set_widget_font(main_buttons[i], font16);
+        #endif
     }
     set_buttons_caption(main_shift_functions);
 }
@@ -1494,6 +1532,7 @@ void dpc_for_main(void * d, INT16S nr)
                 state = &config.slc[0].state;
                 if(edge_up((state->k_down || state->l_down), kl_down)){ /* 刀线下表示正在运行 */
                     gui_set_widget_bkcolor(slc_1_status, COLOR_SLC_RUNNING);
+                    save_running_slc(1);
                 }
                 if(edge_dn((state->k_down || state->l_down), kl_up)){
                     gui_set_widget_bkcolor(slc_1_status, 0);
@@ -1561,6 +1600,7 @@ void dpc_for_main(void * d, INT16S nr)
                 state = &config.slc[1].state;
                 if(edge_up((state->k_down || state->l_down), kl_down)){ /* 刀线下表示正在运行 */
                     gui_set_widget_bkcolor(slc_2_status, COLOR_SLC_RUNNING);
+                    save_running_slc(2);
                 }
                 if(edge_dn((state->k_down || state->l_down), kl_up)){
                     gui_set_widget_bkcolor(slc_2_status, 0);
@@ -1750,24 +1790,39 @@ void dpc_for_main(void * d, INT16S nr)
 void start_main_loop(void)
 {
     int i = 0;
+    int running_slc, pending_slc;
     order_struct order;
 
     TimerSet(TimerForMainScreen, 100L, TIMER_TYPE_AUTO, dpc_for_main, NULL);
     
     TaskDelay(300); /* 用0.3秒等待主画面的显示, 应该是足够了吧 */
 
-    if(config.slc_used & 1){
-        set_plc_on_startup(1);
+    running_slc = tmp_config.running_slc;
+    switch (running_slc) {
+        case 2:
+            running_slc = 2;
+            pending_slc = 1;
+            break;
+        case 0:
+        case 1:
+        default: /* 如果是无效值, 那么就默认为是机1在生产 */
+            running_slc = 1;
+            pending_slc = 2;
+            break;
+    }
+
+    if(config.slc_used & running_slc){
+        set_plc_on_startup(running_slc);
         #if CONFIG_SEND_ORDER_ON_STARTUP
         if(GetOrderForView(&order, i++))
-            slc_send_order(1, &order);
+            slc_send_order(running_slc, &order, 1); /* 发送订单但不启动 */
         #endif
     }
-    if(config.slc_used & 2){
-        set_plc_on_startup(2);
+    if(config.slc_used & pending_slc){
+        set_plc_on_startup(pending_slc);
         #if CONFIG_SEND_ORDER_ON_STARTUP
         if(GetOrderForView(&order, i++))
-            slc_send_order(2, &order);
+            slc_send_order(pending_slc, &order, 1); /* 发送订单但不启动 */
         #endif
     }
 

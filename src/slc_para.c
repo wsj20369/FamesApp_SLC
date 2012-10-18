@@ -746,6 +746,7 @@ enum misc_param_id {
     misc_p_yx_big,
     misc_p_yx_small,
 
+    misc_p_spdscale,
 
     misc_p_group,
 };
@@ -786,6 +787,7 @@ INPUT_DIALOG_GROUP("", misc_p_group, ___X, ___Y, 422, 124, 0, 0)
 INPUT_DIALOG_ITEM("压1 校正:",       misc_p_adj_p1,   ___BYTES,  ___X+10,  ___Y+10,  164, 28, ___FONT, ___STYLE, "")
 INPUT_DIALOG_ITEM("压2 校正:",       misc_p_adj_p2,   ___BYTES,  ___X+10,  ___Y+48,  164, 28, ___FONT, ___STYLE, "")
 INPUT_DIALOG_ITEM("吸风校正:",       misc_p_adj_fan,  ___BYTES,  ___X+10,  ___Y+86,  164, 28, ___FONT, ___STYLE, "")
+INPUT_DIALOG_ITEM("车速比率:      ", misc_p_spdscale, ___BYTES,  ___X+194, ___Y+10,  212, 28, ___FONT, ___STYLE, "")
 #undef  ___X
 #undef  ___Y
 #define ___X  454
@@ -888,6 +890,8 @@ gui_widget * init_misc_param_dlg(void)
     ____do_set(misc_p_adj_p1,   "P1 Adjst:",      "");
     ____do_set(misc_p_adj_p2,   "P2 Adjst:",      "");
     ____do_set(misc_p_adj_fan,  "F  Adjst:",      "");
+
+    ____do_set(misc_p_spdscale, "SpdScale:    ",  "");
 
     #undef ____do_set
 
@@ -1061,6 +1065,9 @@ void misc_param_prepare(int id, char *buf, void * data, INT16U opt)
         case misc_p_yx_small:
             INT16toSTR(buf, slc->misc.yx_small, CHG_OPT_END|CHG_OPT_DEC|CHG_OPT_SIG);
             break;
+        case misc_p_spdscale:
+            INT16toSTR(buf, slc->speed_scale, CHG_OPT_END|CHG_OPT_DEC|CHG_OPT_SIG);
+            break;            
         default:
             sprintf(buf, "--/--");
             break;
@@ -1289,6 +1296,9 @@ int misc_param_finish(int id, char *buf, void * data, KEYCODE key)
             slc->misc.yx_small = STRtoINT16(buf, CHG_OPT_DEC);
             ____write(PLC_ADDR_YXSMALL, temp);
             break;
+        case misc_p_spdscale:
+            slc->speed_scale= STRtoINT16(buf, CHG_OPT_DEC);
+            break;
         default:
             break;
     } /* switch(id) */
@@ -1359,6 +1369,7 @@ BOOL setup_misc_param(struct slc_config_s * __config)
             copy_to_config(&t);
             save_config();
             unlock_kernel();
+            input_dialog_alert(&misc_param_dialog, pick_string("保存成功!", "Saved successfully"), 222);
         } else {
             break;
         }

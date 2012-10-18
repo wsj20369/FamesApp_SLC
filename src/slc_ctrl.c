@@ -245,7 +245,7 @@ again_and_again:
                  * 到这里, 我们已经找到了一笔需要发送的订单, 这笔单应该被发送到 "刚才在工作, 而现在已起刀, 并需要作好准备" 的机器上
                  * 也就是last!
                 */
-                if(!slc_send_order(last, &order)){
+                if(!slc_send_order(last, &order, 0)){
                     /* 发送失败 */
                 }
                 break;

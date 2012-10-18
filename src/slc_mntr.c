@@ -1378,7 +1378,9 @@ void __refresh_state_for_kl_monitor(gui_widget * c)
     } 
     if(1){
         /* 刷新车速 */
-        sprintf(___s, pick_string("车速:    %d", "Speed:  %d"), slc->slc_speed);
+        if (slc->speed_scale < 1)
+            slc->speed_scale = 1;
+        sprintf(___s, pick_string("车速:    %d", "Speed:  %d"), (slc->slc_speed / slc->speed_scale));
         gui_label_set_text(mntr_speed_label, ___s);
         /* 刀上下 */
         k_state = slc->state.k_down;
@@ -1391,8 +1393,8 @@ void __refresh_state_for_kl_monitor(gui_widget * c)
         if(edge_up(k_state, k_up)){ /* 上升沿: 0 => 1 刀是否刚下去 */
             gui_set_widget_color(knife_state_up, 0);
             gui_set_widget_bkcolor(knife_state_up, 0);
-            gui_set_widget_color(knife_state_dn, COLOR_WHITE);
-            gui_set_widget_bkcolor(knife_state_dn, COLOR_BLUE);
+            gui_set_widget_color(knife_state_dn, 254);
+            gui_set_widget_bkcolor(knife_state_dn, COLOR_KL_DOWN);
         }
         /* 线上下 */
         w_state = slc->state.l_down;
@@ -1405,8 +1407,8 @@ void __refresh_state_for_kl_monitor(gui_widget * c)
         if(edge_up(w_state, w_up)){ /* 上升沿: 0 => 1 线是否刚下去 */
             gui_set_widget_color(wheel_state_up, 0);
             gui_set_widget_bkcolor(wheel_state_up, 0);
-            gui_set_widget_color(wheel_state_dn, COLOR_WHITE);
-            gui_set_widget_bkcolor(wheel_state_dn, COLOR_BLUE);
+            gui_set_widget_color(wheel_state_dn, 254);
+            gui_set_widget_bkcolor(wheel_state_dn, COLOR_KL_DOWN);
         }
         /* 启动 */
         start_state = slc->state.start;

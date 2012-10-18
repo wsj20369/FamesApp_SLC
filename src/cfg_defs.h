@@ -17,7 +17,8 @@
  * 控制相关的设定
 */
 
-#define CONFIG_SEND_ORDER_ON_STARTUP    0       /* 启动时发送定单 */
+#define CONFIG_SEND_ORDER_ON_STARTUP    1       /* 启动时发送定单 */
+#define CONFIG_NO_START_PLC_ON_STARTUP  1       /* 启动时发送定单, 但不发上下刀线及启动信号 */
 
 #define CONFIG_SLC_KNIFE_NUMBER         0       /* 刀数的设定, 0=可任意设定 */
 #define CONFIG_SLC_WHEEL_NUMBER         0       /* 线数的设定, 0=可任意设定 */
@@ -30,6 +31,17 @@
 */
 
 #define CONFIG_INPUT_ORDER_FONT24       1       /* 输单画面中用24号字体 */
+#define CONFIG_ORDER_AREA_BITFONT       1       /* 定单区域使用大字体 */
+#define CONFIG_PREVIEW_WIDER            1       /* 预览窗口更宽一些 */
+#define CONFIG_FUNC_BUTTON_BIGFONT      1       /* 功能键使用大字体, 只影响主功能与CTRL功能 */
+
+
+
+
+/*
+ * 计算相关
+*/
+
 
 
 /*

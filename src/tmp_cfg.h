@@ -15,11 +15,13 @@
  *          分压机临时配置文件
  * 
 **----------------------------------------------------------------------------------*/
-struct slc_tmp_config_s {                
+struct slc_tmp_config_s {
     int cim_link;               /* 生管连线 */
     int auto_kl;                /* 刀线上下手自动 */
     int auto_yx;                /* 自动压型 */
     int auto_fan;               /* 吸风自动(排单) */
+    int padding[11];            /* padding */
+    int running_slc;            /* 当前正在运行的机器序号, [1,2] */
 };
 
 #ifndef SLC_TMP_CONFIG_C
@@ -33,6 +35,10 @@ extern  struct slc_tmp_config_s tmp_config;
 **----------------------------------------------------------------------------------*/
 BOOL  read_tmp_config(void);
 BOOL  save_tmp_config(void);
+
+#define save_running_slc(slc_index)     do { tmp_config.running_slc = slc_index; \
+                                             save_tmp_config(); \
+                                        } while(0)
 
 
 

@@ -18,7 +18,7 @@
 **----------------------------------------------------------------------------------*/
 void slc_control_service_initialize(void);
 
-BOOL slc_send_order(int slc_index, order_struct * order);
+BOOL slc_send_order(int slc_index, order_struct * order, int no_control);
 void reset_kl_on_quit(void);
 void slc_read_act_value(int slc_index);
 void slc_send_kl_act_value(int slc_index);
