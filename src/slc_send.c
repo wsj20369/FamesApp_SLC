@@ -139,6 +139,13 @@ BOOL slc_send_order(int slc_index, order_struct * order, int no_control)
     error = slc_locate(slc, x_buf, (order->TRIM)?SLC_FLAG_TRIM:0);
     if(error == SLC_ERR_NONE){
         int  deep, fan;
+
+        /* 先起刀线 */
+        if (!no_control) {
+            slc_clear_fix_ok(slc_index);
+            slc_kl_up_set(slc_index); /* 刀线上 */
+        }
+
         /* 发送设定值到PLC */
         slc_clear_fix_ok(slc_index); /* 清除定位完成信号 */
         for(i=0; i<slc->k_number; i++){
@@ -171,8 +178,6 @@ BOOL slc_send_order(int slc_index, order_struct * order, int no_control)
         }
 
         if (!no_control) {
-            slc_clear_fix_ok(slc_index);
-            slc_kl_up_set(slc_index); /* 刀线上 */
             slc_kl_up_set(slc_index); /* 刀线上 */
             slc_send_start(slc_index); /* 启动 */
         }
