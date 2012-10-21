@@ -25,7 +25,7 @@ struct slc_config_s config = {
             0,
             { 0x3F8, 38400L, 7, 1, COM_PARITY_EVEN, 4 }, /* 机1 串口 */
             { 0x2F8, 38400L, 7, 1, COM_PARITY_EVEN, 3 }, /* 机2 串口 */
-            { 0x3E8,  9600L, 8, 1, COM_PARITY_NONE, 5 }, /* 连线串口 */
+            { 0x2F8,  9600L, 8, 1, COM_PARITY_NONE, 3 }, /* 连线串口 */
             /* 分压机默认参数由read_config()设置 */
 };
 
@@ -50,7 +50,7 @@ BOOL read_config(void)
     if(fd<0){                                 /* 如果打开失败,则要尝试创建文件     */
         slc_setup_to_default(&config.slc[0]);
         slc_setup_to_default(&config.slc[1]);
-        config.slc_used = 3;
+        config.slc_used = 1; /* 默认只使用一台机 */
         config.cim_data_delayed = 0;
         config.cim_protocol_type = 0;
         config.slc_start_mode = 0;
@@ -204,6 +204,25 @@ BOOL copy_to_config(struct slc_config_s * cfg)
     unlock_kernel();
     
     return ok;
+}
+
+
+/*------------------------------------------------------------------------------------
+ * 函数:    slc_is_trim_forced()
+ *
+ * 描述:    是否设定了强制修边
+ *
+ * 返回:    1=Yes, 0=Auto
+**----------------------------------------------------------------------------------*/
+int slc_is_trim_forced(void)
+{
+    int trim_flag = 0;
+
+    if (((config.slc_used & 1) && (config.slc[0].slc_flag & SLC_FLAG_TRIM)) ||
+        ((config.slc_used & 2) && (config.slc[1].slc_flag & SLC_FLAG_TRIM)))
+        trim_flag = 1;
+
+    return trim_flag;
 }
 
 

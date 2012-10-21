@@ -49,6 +49,7 @@ BOOL  check_config(void);
 BOOL  active_config(void);
 BOOL  copy_to_config(struct slc_config_s * cfg);
 
+int   slc_is_trim_forced(void);
 
 
 
