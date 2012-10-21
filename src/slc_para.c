@@ -760,7 +760,7 @@ DECLARE_INPUT_DIALOG_START(misc_param_dialog)
 /*                 参数名称          参数ID          字节数          X         Y       W   H     FONT     STYLE      COMMENT     */
 INPUT_DIALOG_GROUP("", misc_p_group, ___X, ___Y, 422, 162, 0, 0)
 INPUT_DIALOG_ITEM("机械幅宽:",       misc_p_width,    ___BYTES,  ___X+10,  ___Y+10,   164, 28, ___FONT, ___STYLE, "1200mm ~ 2800mm")
-INPUT_DIALOG_ITEM("是否修边:",       misc_p_trim,     1,         ___X+10,  ___Y+48,   164, 28, ___FONT, ___STYLE, "")
+INPUT_DIALOG_ITEM("是否修边:",       misc_p_trim,     1,         ___X+10,  ___Y+48,   164, 28, ___FONT, ___STYLE, "1=强制修边, 0=自动(订单控制)")
 INPUT_DIALOG_ITEM("是否预压:",       misc_p_prep,     1,         ___X+10,  ___Y+86,   164, 28, ___FONT, ___STYLE, "自动预压时, 后排线跟随前排线而动, 仅用于零压型")
 INPUT_DIALOG_ITEM("自动标准:",       misc_p_a_std,    1,         ___X+10,  ___Y+124,  164, 28, ___FONT, ___STYLE, "是否使用自动生成的标准位置")
 INPUT_DIALOG_ITEM("向左最大偏移度:", misc_p_lmax,     ___BYTES,  ___X+194, ___Y+10,   212, 28, ___FONT, ___STYLE, "排单时的最大中心偏移(向左时)")
@@ -849,7 +849,7 @@ gui_widget * init_misc_param_dlg(void)
                   } while(0)
 
     ____do_set(misc_p_width,    "MaxWidth:",      NULL);
-    ____do_set(misc_p_trim,     "Trim:    ",      "");
+    ____do_set(misc_p_trim,     "Trim:    ",      "1=ForceTRIM, 0=Auto(Follow order)");
     ____do_set(misc_p_prep,     "PrePress:",      "");
     ____do_set(misc_p_a_std,    "AutoStrd:",      "Auto Generate Standard Position");
     ____do_set(misc_p_lmax,     "MaxLeftOffs :",  "Max Left Offset");
