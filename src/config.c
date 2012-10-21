@@ -127,20 +127,24 @@ BOOL active_config(void)
     /* »ú1 */
     slc = &config.slc[0];
     slc->slc_speed = 0;
+    ____reset(slc->state);
     ____reset(slc->k_whet);
+    /*
     ____reset(slc->kl_set);
     ____reset(slc->kl_act);
-    ____reset(slc->state);
     ____reset(slc->working);
+    */
 
     /* »ú2 */
     slc = &config.slc[1];
     slc->slc_speed = 0;
+    ____reset(slc->state);
     ____reset(slc->k_whet);
+    /*
     ____reset(slc->kl_set);
     ____reset(slc->kl_act);
-    ____reset(slc->state);
     ____reset(slc->working);
+    */
 
     return ok;
 

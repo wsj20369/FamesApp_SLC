@@ -197,6 +197,8 @@ BOOL slc_send_order(int slc_index, order_struct * order, int no_control)
             waitkey(2000);
             gui_set_widget_bkcolor(status_bar, ___bkcolor);
         }
+
+        save_config(); /* 保存订单信息到全局配置文件 */
     } else { /* 显示错误信息 */
         sprintf(___s, pick_string("订单有错误: %s[%08lX]", "Error: %s[%08lX]"), 
                       slc_error_message(error), error);
