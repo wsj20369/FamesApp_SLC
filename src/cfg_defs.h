@@ -38,6 +38,13 @@
 #define CONFIG_FUNC_BUTTON_BIGFONT      1       /* 功能键使用大字体, 只影响主功能与CTRL功能 */
 
 
+/*
+ * 注册相关
+*/
+
+#define CONFIG_REG_PROMPT_TIME1         10UL    /* 10秒钟之后, 第一组提醒(仅一次) */
+#define CONFIG_REG_PROMPT_TIME2         21606UL /* 自启动6小时之后 [+6秒] */
+#define CONFIG_REG_PROMPT_TIMEx         600UL   /* 下次提醒间隔时间: 10分钟 */
 
 
 /*

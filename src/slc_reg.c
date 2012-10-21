@@ -554,7 +554,7 @@ static void __event_handler(int is_registered)
 {
     static unsigned int prompt_1st = 0, prompt_2ed = 0;
     INT32U seconds;
-    static INT32U wait_time = 28806UL; /* 自启动8小时之后 [+6秒] */
+    static INT32U wait_time = CONFIG_REG_PROMPT_TIME2;
     gui_widget * current_root;
     prepare_atomic() /* 好奇怪的定义, 呵呵, 注意这句话是没有错的 */
 
@@ -566,7 +566,7 @@ static void __event_handler(int is_registered)
     out_atomic();
     seconds /= 1000UL;  /* 毫秒 => 秒 */
 
-    if ((prompt_1st == 0) && (seconds >= 10)) { /* 10秒钟之后, 第一组提醒(仅一次) */
+    if ((prompt_1st == 0) && (seconds >= CONFIG_REG_PROMPT_TIME1)) { /* 第一组提醒(仅一次) */
         current_root = gui_get_root_widget();
         gui_put_root_widget();
 
@@ -592,7 +592,7 @@ static void __event_handler(int is_registered)
 
             if (current_root == main_screen) { /* 只在主画面下显示 */
                 prompt_2ed++;
-                wait_time = seconds + 600UL; /* 下次提醒在10分钟之后 */
+                wait_time = seconds + CONFIG_REG_PROMPT_TIMEx; /* 下次提醒在10分钟之后 */
                 clrkey();
                 putkey(ESC);
                 putkey(ESC);
