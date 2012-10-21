@@ -63,6 +63,7 @@ enum slc_global_param_id {
 
     __slc_ctrl,
     __slc_start_mode,
+    __slc_s_o_mode_os, /* send order mode on startup, 无订单时的订单发送模式 */
 
     __misc,
     __slc_language,
@@ -187,7 +188,8 @@ INPUT_DIALOG_ITEM("中断号: ",    __cim_port_irq,    2,  ___X+10,  ___Y+184, 180,
 #define ___X  724
 #define ___Y  45
 INPUT_DIALOG_GROUP(" 分压机控制选项 ", __slc_ctrl, ___X, ___Y, 216, 159, ___FONT, GROUPBOX_STYLE_CAPTION)
-INPUT_DIALOG_ITEM("启动模式:",  __slc_start_mode,   3,  ___X+10,  ___Y+56,  180, 28, ___FONT, ___STYLE,  "分压机的启动模式")
+INPUT_DIALOG_ITEM("启动模式:",  __slc_start_mode,   3,  ___X+10,  ___Y+24,  180, 28, ___FONT, ___STYLE,  "分压机的启动模式(不用)")
+INPUT_DIALOG_ITEM("开机送单:",  __slc_s_o_mode_os,  2,  ___X+10,  ___Y+56,  180, 28, ___FONT, ___STYLE,  "开机送单模式, 0=不送; 1=若无单则不送; 2=若无单,送关机前订单; 3=若无单,送1x1200; +10=发刀线上及启动信号;")
 /* 其它选项 */
 #undef  ___X
 #undef  ___Y
@@ -260,6 +262,7 @@ gui_widget * init_slc_global_param_dlg(void)
 
     ____do_set(__slc_ctrl,          " SLC Control ",  NULL);
     ____do_set(__slc_start_mode,    "StartMode: ",    "Start Mode(Not Used)");
+    ____do_set(__slc_s_o_mode_os,   "StartSend: ",    "Send Mode on Startup, 0=None; 1/2/3/11/12/13, Look at the manual!");
 
     ____do_set(__misc,              " MISC ",         NULL);
     ____do_set(__slc_language,      "Language:  ",    "Language: 0=简体中文(GB2312), 1=ENGLISH");
@@ -423,6 +426,9 @@ void slc_global_param_prepare(int id, char *buf, void * data, INT16U opt)
             break;
         case __slc_start_mode:
             sprintf(buf, "%d", __config->slc_start_mode);
+            break;
+        case __slc_s_o_mode_os:
+            sprintf(buf, "%d", __config->send_order_on_startup);
             break;
         case __slc_language:
             if(opt & INPUT_DIALOG_PREPARE_OPT_EDITING){            
@@ -719,6 +725,9 @@ int slc_global_param_finish(int id, char *buf, void * data, KEYCODE key)
             break;
         case __slc_start_mode:
             __config->slc_start_mode = temp;
+            break;
+        case __slc_s_o_mode_os:
+            __config->send_order_on_startup = temp;
             break;
         case __slc_language:
             if(temp)

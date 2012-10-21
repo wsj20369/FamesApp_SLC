@@ -1796,6 +1796,8 @@ void start_main_loop(void)
     int i = 0;
     int running_slc, pending_slc;
     order_struct order;
+    order_struct default_order = DFLT_order_struct;
+    slc_descriptor_t * slc;
 
     TimerSet(TimerForMainScreen, 100L, TIMER_TYPE_AUTO, dpc_for_main, NULL);
     
@@ -1816,18 +1818,63 @@ void start_main_loop(void)
     }
 
     if(config.slc_used & running_slc){
+        slc = &config.slc[running_slc-1];
         set_plc_on_startup(running_slc);
-        #if CONFIG_SEND_ORDER_ON_STARTUP
-        if(GetOrderForView(&order, i++))
-            slc_send_order(running_slc, &order, 1); /* 发送订单但不启动 */
-        #endif
+        if (config.send_order_on_startup > _SendOrderMode_None) {
+            if(GetOrderForView(&order, i++)) { /* 有订单数据 */
+                if (config.send_order_on_startup > 10)
+                    slc_send_order(running_slc, &order, 0); /* 发送订单+启动 */
+                else
+                    slc_send_order(running_slc, &order, 1); /* 发送订单但不启动 */
+            } else { /* 在没有订单的情况下... */
+                switch (config.send_order_on_startup) {
+                    case _SendOrderMode_SendLastRunning:
+                        slc_send_order(running_slc, &slc->working, 1); /* 发送关机前订单但不启动 */
+                        break;
+                    case _SendOrderMode_SendLastRunning_Control:
+                        slc_send_order(running_slc, &slc->working, 0); /* 发送关机前订单+启动 */
+                        break;
+                    case _SendOrderMode_SendDefault:
+                        slc_send_order(running_slc, &default_order, 1); /* 发送默认订单但不启动 */
+                        break;
+                    case _SendOrderMode_SendDefault_Control:
+                        slc_send_order(running_slc, &default_order, 0); /* 发送默认订单+启动 */
+                        break;
+                    default:
+                        break; /* 若是其它值, 且又订单为空, 那就什么也不发送了 */
+                }
+            }
+        }
     }
+
     if(config.slc_used & pending_slc){
+        slc = &config.slc[pending_slc-1];
         set_plc_on_startup(pending_slc);
-        #if CONFIG_SEND_ORDER_ON_STARTUP
-        if(GetOrderForView(&order, i++))
-            slc_send_order(pending_slc, &order, 1); /* 发送订单但不启动 */
-        #endif
+        if (config.send_order_on_startup > _SendOrderMode_None) {
+            if(GetOrderForView(&order, i++)) { /* 有订单数据 */
+                if (config.send_order_on_startup > 10)
+                    slc_send_order(pending_slc, &order, 0); /* 发送订单+启动 */
+                else
+                    slc_send_order(pending_slc, &order, 1); /* 发送订单但不启动 */
+            } else { /* 在没有订单的情况下... */
+                switch (config.send_order_on_startup) {
+                    case _SendOrderMode_SendLastRunning:
+                        slc_send_order(pending_slc, &slc->working, 1); /* 发送关机前订单但不启动 */
+                        break;
+                    case _SendOrderMode_SendLastRunning_Control:
+                        slc_send_order(pending_slc, &slc->working, 0); /* 发送关机前订单+启动 */
+                        break;
+                    case _SendOrderMode_SendDefault:
+                        slc_send_order(pending_slc, &default_order, 1); /* 发送默认订单但不启动 */
+                        break;
+                    case _SendOrderMode_SendDefault_Control:
+                        slc_send_order(pending_slc, &default_order, 0); /* 发送默认订单+启动 */
+                        break;
+                    default:
+                        break; /* 若是其它值, 且又订单为空, 那就什么也不发送了 */
+                }
+            }
+        }
     }
 
     main_default_functions = pick_string(main_default_functions_zh, main_default_functions_en);

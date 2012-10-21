@@ -55,6 +55,7 @@ BOOL read_config(void)
         config.cim_protocol_type = 0;
         config.slc_start_mode = 0;
         config.language = 0;
+        config.send_order_on_startup = CONFIG_DEFAULT_SEND_ONSTARTUP;
         if(save_config()){
             fd=open(config_fname, O_RDONLY|O_BINARY);
         } else {

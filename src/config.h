@@ -34,6 +34,7 @@ struct slc_config_s {
     int cim_protocol_type;      /* 生管连线协议类型 */
     int cim_link_point;         /* 生管换单信号连接点, 0=机1, 其它=机2 */
     int slc_start_mode;         /* 分压机启动模式 */
+    int send_order_on_startup;  /* 启动时的送单模式 */
     int language;               /* 语言, 0=中文, 1=英语 */
 };
 

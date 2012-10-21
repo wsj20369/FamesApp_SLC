@@ -62,6 +62,7 @@ typedef struct order_record_s {             /* 订单记录结构---------------------
 typedef struct order_record_s order_struct;
 
 #define INIT_order_struct { 0, "", 0, "", 0, "", 1 } /* 默认修边=1 */
+#define DFLT_order_struct { 0, "Default", 1, "1200", 0, "", 1 } /* 默认订单 */
 
 #if sizeof(order_header_t) > 32767
 #error The struct "order_header" is too large (size > 32K)

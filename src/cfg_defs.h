@@ -17,15 +17,25 @@
  * 控制相关的设定
 */
 
-#define CONFIG_SEND_ORDER_ON_STARTUP    1       /* 启动时发送定单 */
-#define CONFIG_NO_START_PLC_ON_STARTUP  1       /* 启动时发送定单, 但不发上下刀线及启动信号 */
-
 #define CONFIG_SLC_KNIFE_NUMBER         0       /* 刀数的设定, 0=可任意设定 */
 #define CONFIG_SLC_WHEEL_NUMBER         0       /* 线数的设定, 0=可任意设定 */
 
 #define CONFIG_PLC_CONNECT_TIMEOUT      50      /* 单位为0.1秒, PLC断线的超时值 */
 
 #define CONFIG_NOACTION_ON_QUIT         1       /* 退出时, 不做任何动作 */
+
+
+enum {                                          /* 启动时的送单模式 */
+    _SendOrderMode_None = 0,
+    _SendOrderMode_SendOnly = 1,
+    _SendOrderMode_SendLastRunning = 2,
+    _SendOrderMode_SendDefault = 3,
+    _SendOrderMode_SendOnly_Control = 11,
+    _SendOrderMode_SendLastRunning_Control = 12,
+    _SendOrderMode_SendDefault_Control = 13
+};
+#define CONFIG_DEFAULT_SEND_ONSTARTUP   _SendOrderMode_SendOnly
+
 
 
 /*
