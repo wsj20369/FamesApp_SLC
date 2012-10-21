@@ -171,6 +171,8 @@ BOOL slc_send_order(int slc_index, order_struct * order, int no_control)
         }
 
         if (!no_control) {
+            slc_clear_fix_ok(slc_index);
+            slc_kl_up_set(slc_index); /* 刀线上 */
             slc_kl_up_set(slc_index); /* 刀线上 */
             slc_send_start(slc_index); /* 启动 */
         }
@@ -238,7 +240,7 @@ void reset_kl_on_quit(void)
 /*-----------------------------------------------------------------------------------------
  * 函数:    slc_read_regress_value()
  *
- * 描述:    从PLC读取刀线归零值
+ * 描述:    从PLC读取刀线实际值
 **---------------------------------------------------------------------------------------*/
 void slc_read_act_value(int slc_index)
 {
@@ -268,10 +270,12 @@ void slc_read_act_value(int slc_index)
     tmp[0] = (long)slc->kl_act.press_1_location; /* 前压 */
     ___slc_plc_rw(slc_index, FATEK_PLC_READ_DR, PLC_ADDR_ACT_PRESS1, tmp, 1);
     slc->kl_act.press_1_location = (int)tmp[0];
-    
-    tmp[0] = (long)slc->kl_act.press_2_location; /* 后压 */
-    ___slc_plc_rw(slc_index, FATEK_PLC_READ_DR, PLC_ADDR_ACT_PRESS2, tmp, 1);
-    slc->kl_act.press_2_location = (int)tmp[0];
+
+    if (config.slc[slc_index-1].slc_type == SLC_TYPE_DOUBLE) {
+        tmp[0] = (long)slc->kl_act.press_2_location; /* 后压 */
+        ___slc_plc_rw(slc_index, FATEK_PLC_READ_DR, PLC_ADDR_ACT_PRESS2, tmp, 1);
+        slc->kl_act.press_2_location = (int)tmp[0];
+    }
 
     tmp[0] = (long)slc->kl_act.fan_location;     /* 吸风口 */
     ___slc_plc_rw(slc_index, FATEK_PLC_READ_DR, PLC_ADDR_ACT_FAN, tmp, 1);
@@ -541,9 +545,14 @@ void slc_send_deep_value(int slc_index, int deep)
 {
     INT32S tmp;
 
+    if (slc_index != 1 && slc_index != 2)
+        return;
+
     tmp = (INT32S)deep;
     ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_DR, PLC_ADDR_SET_PRESS1, &tmp, 1);
-    ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_DR, PLC_ADDR_SET_PRESS2, &tmp, 1);
+    if (config.slc[slc_index-1].slc_type == SLC_TYPE_DOUBLE) {
+        ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_DR, PLC_ADDR_SET_PRESS2, &tmp, 1);
+    }
 }
 
 /*-----------------------------------------------------------------------------------------
@@ -650,6 +659,8 @@ void set_plc_on_startup(int slc_index)
     ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_DR, PLC_ADDR_YXBIG, &tmp, 1);
     tmp = (INT32S)(config.slc[slc_index-1].misc.yx_small);
     ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_DR, PLC_ADDR_YXSMALL, &tmp, 1);
+
+    slc_clear_fix_ok(slc_index); /* 开机时清除定位完成信号 */
 }
 
 
