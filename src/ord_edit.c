@@ -121,12 +121,16 @@ struct order_edit_private {
 void prepare_edit(int id, char * buf, void * data, INT16U opt)
 {
     order_struct * order;
+    int trim_flag;
     struct order_edit_private * temp;
 
     FamesAssert(buf);
     FamesAssert(data);
     if(!buf || !data)
         return;
+
+    /* 计算修边标记 */
+    trim_flag = slc_is_trim_forced();
 
     temp = (struct order_edit_private *)data;
     order = &temp->order;
@@ -156,6 +160,8 @@ void prepare_edit(int id, char * buf, void * data, INT16U opt)
             sprintf(buf, "%s", order->FLUTE);
             break;
         case ORD_EDIT_TIRM:
+            if (trim_flag) /* 有强制修边的标记 */
+                order->TRIM = 1;
             if(opt & INPUT_DIALOG_PREPARE_OPT_EDITING){
                 if(order->TRIM)
                     sprintf(buf, "1");
@@ -191,6 +197,7 @@ int finish_edit(int id, char * buf, void * data, KEYCODE key)
     order_struct * order;
     struct order_edit_private * temp;
     int    i;
+    int    trim_flag;
 
     FamesAssert(buf);
     FamesAssert(data);
@@ -199,6 +206,9 @@ int finish_edit(int id, char * buf, void * data, KEYCODE key)
 
     if(key == ESC)
         return 1;
+
+    /* 计算修边标记 */
+    trim_flag = slc_is_trim_forced();
 
     temp = (struct order_edit_private *)data;
     order = &temp->order;
@@ -237,6 +247,8 @@ int finish_edit(int id, char * buf, void * data, KEYCODE key)
                 order->TRIM = 1;
             else 
                 order->TRIM = 0;
+            if (trim_flag) /* 有强制修边标记 */
+                order->TRIM = 1;
             break;
         default:
             break;

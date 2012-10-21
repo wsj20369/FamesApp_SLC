@@ -25,6 +25,8 @@
 
 #define CONFIG_PLC_CONNECT_TIMEOUT      50      /* 单位为0.1秒, PLC断线的超时值 */
 
+#define CONFIG_NOACTION_ON_QUIT         1       /* 退出时, 不做任何动作 */
+
 
 /*
  * 画面相关的设定

@@ -194,14 +194,14 @@ void init_main_screen(void)
         getch();
         ExitApplication();
     }
-    order_shouldbe_preview = gui_create_widget(preview_id, 10, 422, 998, 226, atoi(___color_preview), atoi(___bkcolor_preview), font16, PREVIEW_STYLE_CLIENT_BDR|PREVIEW_STYLE_MODAL_FRAME);
+    order_shouldbe_preview = gui_create_widget(preview_id, 10, 375, 998, 273, atoi(___color_preview), atoi(___bkcolor_preview), font16, PREVIEW_STYLE_CLIENT_BDR|PREVIEW_STYLE_MODAL_FRAME);
     if(!order_shouldbe_preview)
         goto some_error;
     gui_widget_link(main_screen, order_shouldbe_preview);
     preview_init_private(order_shouldbe_preview);
 
     /* 一条虚线     */
-    dashedline_in_main = gui_create_widget(GUI_WIDGET_DASHEDLINE, 10, 416, 998, 5, 73, 0, 0, DASHED_STYLE_CENTER);
+    dashedline_in_main = gui_create_widget(GUI_WIDGET_DASHEDLINE, 10, 369, 998, 5, 73, 0, 0, DASHED_STYLE_CENTER);
     if(!dashedline_in_main)
         goto some_error;
     gui_widget_link(main_screen, dashedline_in_main);
@@ -209,7 +209,7 @@ void init_main_screen(void)
     gui_dashedline_set_param(dashedline_in_main, 970, 3, 0xE0); /* 0xE4 is good */
 
     /* 订单区域     */
-    main_order_view = gui_create_widget(GUI_WIDGET_VIEW, 10, 112, 998, 303, atoi(___color_order_title), atoi(___bkcolor_order_title), 1, 0x70);
+    main_order_view = gui_create_widget(GUI_WIDGET_VIEW, 10, 112, 998, 256, atoi(___color_order_title), atoi(___bkcolor_order_title), 1, VIEW_STYLE_FIELDS_TITLE|VIEW_STYLE_MARK_BAR);
     if(!main_order_view)
         goto some_error;
     gui_widget_link(main_screen, main_order_view);
@@ -653,14 +653,16 @@ void cmd_main_browse(void * data)
 
 void cmd_main_ID(void * data)
 {
-    data = data; /* suppress compiler warnings */
-
-    gui_hide_widget(main_order_view); /* 隐藏订单区域 */
+    gui_hide_widget(order_shouldbe_preview);
+    gui_hide_widget(dashedline_in_main);
+    gui_hide_widget(main_order_view);
     gui_widget_link(main_screen, register_dialog);
     check_register_dialog(256, 202, (int)data);
     set_buttons_caption_to_default();
     gui_widget_unlink(main_screen, register_dialog);
-    gui_show_widget(main_order_view); /* 显示订单区域 */
+    gui_show_widget(main_order_view);
+    gui_show_widget(dashedline_in_main);
+    gui_show_widget(order_shouldbe_preview);
 }
 
 void cmd_main_VER(void * data)
@@ -703,8 +705,10 @@ void cmd_main_QUIT(void * data)
 
     if(check_confirm(pick_string(" >>> 退出 <<<", ">>> Quit <<<"), 
                      pick_string("要“退出”分压机程序吗?(Y/N)", "Confirm to \"Quit\" program?(Y/N)"))){
+#if CONFIG_NOACTION_ON_QUIT != 1
         /* ... */
         reset_kl_on_quit();
+#endif
         ExitApplication();
     }
     set_buttons_caption_to_default();
@@ -1129,8 +1133,8 @@ static view_fields_t order_view_fields[] =
     { "压      线      资      料", 
                         __id_data,  64, 66,  ____style,  DRAW_OPT_FIL_BG, "", },
     { "压型",           __id_yx,    1,  6,   ____style,  ____draw_style,  "", },
-    { "楞别",           __id_flute, 3,  8,   ____style,  ____draw_style,  "", },
-    { "修边",           __id_trim,  1,  4,   ____style,  ____draw_style,  "", },
+    { "楞别",           __id_flute, 3,  6,   ____style,  ____draw_style,  "", },
+    { "修边",           __id_trim,  1,  6,   ____style,  ____draw_style,  "", },
     { "备注",           __id_commt, 7,  7,   ____style,  ____draw_style,  "", },
     { NULL, }
 #undef ____style
