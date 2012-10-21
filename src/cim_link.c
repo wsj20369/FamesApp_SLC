@@ -212,6 +212,8 @@ static BOOL kd_std_action(void * data)
         }
         order.YX = CHARtoDEC(ro->press[0]);
         order.TRIM = (INT16U)(ro->speccut[0].edge[0] == 'Y');
+        if (slc_is_trim_forced())
+            order.TRIM = 1;
         for(k=0; k<3; k++){
             speccut[k].cuts = CHARtoDEC(ro->speccut[k].cuts[0]);
             v = STRtoINT16(ro->speccut[k].cutwidth, CHG_OPT_DEC|4);
