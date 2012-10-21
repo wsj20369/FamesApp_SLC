@@ -157,7 +157,7 @@ again_and_again:
         state = &slc->state;
         if(edge_up(state->fixed, old->fixed)){ /* 定位信号 */
             if(tmp_config.auto_kl){
-                slc_kl_down_set(slc_index);
+                slc_kl_down_set(slc_index+1);
             }
         }
         if(edge_up(state->order_chg, old->order_chg)){ /* 手动换单信号 */
