@@ -96,7 +96,7 @@ INT16U get_last_workno(void);
 BOOL   similar_order(order_struct * order1, order_struct * order2);
 
 
-#endif /* #ifndef FAMES_ORDER_H */
+#endif /* #ifndef SLC_ORDER_H */
 
 /*====================================================================================
  * 
