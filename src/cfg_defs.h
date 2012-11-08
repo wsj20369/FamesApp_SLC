@@ -34,6 +34,7 @@ enum {                                          /* 启动时的送单模式 */
     _SendOrderMode_SendLastRunning_Control = 12,
     _SendOrderMode_SendDefault_Control = 13
 };
+
 #define CONFIG_DEFAULT_SEND_ONSTARTUP   _SendOrderMode_SendOnly
 
 

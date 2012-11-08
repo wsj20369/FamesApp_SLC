@@ -399,6 +399,7 @@ static slc_descriptor_t __default_slc = {
 #define SLC_FLAG_TRIM  0x0001   /* 修边               */ 
 #define SLC_FLAG_PREP  0x0002   /* 预压(仅双排线有效) */
 #define SLC_FLAG_ASTD  0x0004   /* 自动标准位置       */
+#define SLC_FLAG_RVSE  0x0100   /* 刀线反排模式       */
 
 /*------------------------------------------------------------------------------------
  * 

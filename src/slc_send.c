@@ -99,6 +99,7 @@ BOOL slc_send_order(int slc_index, order_struct * order, int no_control)
     int  i, cuts;
     INT32U error;
     BOOL   retval;
+    INT16U locate_flag = 0;
     static gui_widget * old, * old2;
     extern int plc_connected[];
     static int ___lock = 0;
@@ -136,7 +137,8 @@ BOOL slc_send_order(int slc_index, order_struct * order, int no_control)
             goto out;
         }
     }
-    error = slc_locate(slc, x_buf, (order->TRIM)?SLC_FLAG_TRIM:0);
+    locate_flag = (config.slc_reverse_mode ? SLC_FLAG_RVSE : 0);
+    error = slc_locate(slc, x_buf, locate_flag|((order->TRIM)?SLC_FLAG_TRIM:0));
     if(error == SLC_ERR_NONE){
         int  deep, fan;
 

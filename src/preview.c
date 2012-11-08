@@ -261,6 +261,7 @@ void __widget_preview_draw(gui_widget * preview)
     order_struct * order;
     int i, _x, _y, _x1, _y1;
     int __x, __y, __x1;
+    INT16U locate_flag;
     RECT * inner_rect, * oi_area;
     char order_info_buf[256], x_buf[2048];
 
@@ -398,7 +399,8 @@ void __widget_preview_draw(gui_widget * preview)
                 getch();
                 #endif
                 /*********   计算预计的刀线位置   *********/
-                order_width = init_orderkl(&t->temp_slc, x_buf, &k_data, &k_nr, &l_data, &l_nr, SLC_FLAG_TRIM);
+                locate_flag = (config.slc_reverse_mode ? SLC_FLAG_RVSE : 0) | SLC_FLAG_TRIM;
+                order_width = init_orderkl(&t->temp_slc, x_buf, &k_data, &k_nr, &l_data, &l_nr, locate_flag);
                 if(k_nr < 2 || k_nr > 12){ /* 一般来说, 不会用到12把刀吧, -- Jun */
                     draw_font_ex(x, y, (x1-x), (y1-y)-8, 
                                  pick_string("=== 压 线 资 料 有 误 ===", "=== Data has some mistakes ==="), 
@@ -483,6 +485,7 @@ void __widget_preview_draw(gui_widget * preview)
     order_struct * order;
     int i, _x, _y, _x1, _y1;
     int __x, __y, __x1;
+    INT16U locate_flag;
     RECT * inner_rect, * oi_area;
     char order_info_buf[256], x_buf[2048];
 
@@ -619,7 +622,8 @@ void __widget_preview_draw(gui_widget * preview)
                 getch();
                 #endif
                 /*********   计算预计的刀线位置   *********/
-                order_width = init_orderkl(&t->temp_slc, x_buf, &k_data, &k_nr, &l_data, &l_nr, SLC_FLAG_TRIM);
+                locate_flag = (config.slc_reverse_mode ? SLC_FLAG_RVSE : 0) | SLC_FLAG_TRIM;
+                order_width = init_orderkl(&t->temp_slc, x_buf, &k_data, &k_nr, &l_data, &l_nr, locate_flag);
                 if(k_nr < 2 || k_nr > 12){ /* 一般来说, 不会用到12把刀吧, -- Jun */
                     draw_font_ex(x, y, (x1-x), (y1-y)-8, 
                                  pick_string("=== 压 线 资 料 有 误 ===", "=== Data has some mistakes ==="), 

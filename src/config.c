@@ -56,6 +56,7 @@ BOOL read_config(void)
         config.slc_start_mode = 0;
         config.language = 0;
         config.send_order_on_startup = CONFIG_DEFAULT_SEND_ONSTARTUP;
+        config.slc_reverse_mode = 0;
         if(save_config()){
             fd=open(config_fname, O_RDONLY|O_BINARY);
         } else {

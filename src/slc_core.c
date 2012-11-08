@@ -367,6 +367,36 @@ void slc_make_standard_location(slc_descriptor_t * slc, INT16U flag)
 }
 
 /*------------------------------------------------------------------------------------
+ * 函数:    __do_reverse_mode()
+ *
+ * 描述:    位置数据反向
+ *
+ * 输入:    1) data      位置数据
+ *          2) nr        位置数据个数
+ *
+ * 输出:    1) 反向后的data
+ *
+ * 返回:    无
+**----------------------------------------------------------------------------------*/
+static void __do_reverse_mode(int data[], int nr)
+{
+    int i, t, _nr;
+
+    if (nr <= 0)
+        return;
+
+    for (i = 0; i < nr; i++)
+        data[i] = -data[i]; /* 符号反向 */
+
+    _nr = nr / 2;
+    for (i = 0; i < _nr; i++) { /* 数据反转 */
+        t = data[i];
+        data[i] = data[nr - 1 - i];
+        data[nr - 1 - i] = t;
+    }
+}
+
+/*------------------------------------------------------------------------------------
  * 函数:    init_orderkl()
  *
  * 描述:    订单的刀线位置初始化
@@ -496,6 +526,11 @@ int init_orderkl(slc_descriptor_t * slc,
         }
         k -= 2; /* 修边刀共有2个 */
         slc->order_kl.k_pos[k] = 0;
+    }
+
+    if(flag & SLC_FLAG_RVSE){ /* 刀线反排模式 */
+        __do_reverse_mode(slc->order_kl.k_pos, k);
+        __do_reverse_mode(slc->order_kl.l_pos, l);
     }
 
     slc->order_kl.k_pos_nr = k;

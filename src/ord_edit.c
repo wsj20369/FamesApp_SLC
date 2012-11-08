@@ -272,6 +272,7 @@ BOOL order_edit(void)
     BOOL retval;
     int  loop;
     INT16U workno;
+    INT16U locate_flag = 0;
     slc_descriptor_t ___slc;
     extern struct slc_config_s config;
 
@@ -298,10 +299,11 @@ BOOL order_edit(void)
                 }
             }
             ___slc = config.slc[0];
-            error = slc_locate(&___slc, x_buf, (order_for_edit.order.TRIM)?SLC_FLAG_TRIM:0);
+            locate_flag = (config.slc_reverse_mode ? SLC_FLAG_RVSE : 0);
+            error = slc_locate(&___slc, x_buf, locate_flag|((order_for_edit.order.TRIM)?SLC_FLAG_TRIM:0));
             if(SLC_ERR_NONE != error){ /* 机1不能排, 那就试一下机2吧 */
                 ___slc = config.slc[1];
-                error = slc_locate(&___slc, x_buf, (order_for_edit.order.TRIM)?SLC_FLAG_TRIM:0);
+                error = slc_locate(&___slc, x_buf, locate_flag|((order_for_edit.order.TRIM)?SLC_FLAG_TRIM:0));
             }
             if(SLC_ERR_NONE != error){
                 sprintf(___s,  "压线有错误, 错误码: %08lX, %s", error, slc_error_message(error));
