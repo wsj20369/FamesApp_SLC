@@ -764,13 +764,18 @@ BOOL PackWorkNo(int interval)
 INT16U get_first_workno(void)
 {
     INT16U wkno;
+    int    nr;
     FamesAssert(order_header);
 
     if(!order_header)
         return 0;
 
     lock_kernel();
-    wkno = order_header->WORKNO[0];
+    nr = order_header->ORDERS;
+    if(nr > 0)
+        wkno = order_header->WORKNO[0];
+    else
+        wkno = 0;
     unlock_kernel();
 
     return wkno;
