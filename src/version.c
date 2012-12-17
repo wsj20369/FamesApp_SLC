@@ -25,7 +25,7 @@ char  ___AUTHOR[]    =      "Jun";
 #define VersionMajor         0
 #define VersionMinor         9
 
-#define VersionString       "0.9.7" /* 不可超过32个字节 */
+#define VersionString       "0.9.8" /* 不可超过32个字节 */
 
 INT16U get_version(void)
 {
