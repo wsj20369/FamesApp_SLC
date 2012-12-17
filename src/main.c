@@ -357,7 +357,7 @@ static void ___alert(INT08S * zh_str, INT08S * en_str)
         return;
     gui_label_set_text(main_status_bar, s);
     gui_set_widget_bkcolor(main_status_bar, COLOR_WARNING);
-    waitkey(1000L);
+    waitkey(1200L);
     gui_set_widget_bkcolor(main_status_bar, 0);
 }
 
@@ -690,13 +690,13 @@ void cmd_main_SYS(void * data)
 
 void cmd_main_PALETTE(void * data)
 {
+    data = data;
     ___alert("严重错误: 调色表不存在!", "Fatal: No Palette view!");
     return;
 
 #if 0
     //FIXME: 因为内存不够了, 暂时先不要显示颜色表
     extern gui_widget * palette_screen;
-    data = data;
     gui_set_root_widget(palette_screen);
     while(NONE_KEY == waitkey(0L));
     clrkey();
