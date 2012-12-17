@@ -30,9 +30,14 @@ void slc_init_gui(void)
     gui_sys_mntr_init_private(sys_monitor);
         
     gui_widget_link(about_system_root, sys_monitor);
-    
+
+    #if 0
     init_welcome_screen();
+    #endif
+    #if 0
+    //FIXME: 因为内存不够了, 暂时先不要显示颜色表
     show_palette_init();
+    #endif
     init_main_screen();
     init_send_screen();      /* 订单发送画面 */
 

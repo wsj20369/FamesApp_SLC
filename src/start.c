@@ -52,21 +52,9 @@ void sk_refresh_screen(void)
 **----------------------------------------------------------------------------------*/
 void __task start(void * data)
 {
-    char  ___s[64];
     extern struct slc_config_s config;
 
     data = data;
-
-    #if 0
-    lock_kernel();
-    {
-        struct date today;
-        getdate(&today);
-        if(today.da_year != 2011 || (today.da_year == 2011 && today.da_mon >= 9))
-            Register();
-    }
-    unlock_kernel();
-    #endif
 
     startup_init();
 
@@ -88,11 +76,14 @@ void __task start(void * data)
     slc_init_gui();
 
     #if 0
-    welcome_start();
-    ___s[0] = 0;
-    load_string(___s, sizeof(___s), "welcome_started");
-    startup_message(___s);
-    welcome_ended();
+    {
+        char  ___s[64];
+        welcome_start();
+        ___s[0] = 0;
+        load_string(___s, sizeof(___s), "welcome_started");
+        startup_message(___s);
+        welcome_ended();
+    }
     #endif
 
     active_main_screen(); /* ÏÔÊ¾Ö÷»­Ãæ */
@@ -121,7 +112,7 @@ long get_free_mem(void)
     long mem;
 
     lock_kernel();
-    mem = (long)coreleft();
+    mem = (long)farcoreleft();
     unlock_kernel();
 
     return mem;

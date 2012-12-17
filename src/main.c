@@ -690,6 +690,11 @@ void cmd_main_SYS(void * data)
 
 void cmd_main_PALETTE(void * data)
 {
+    ___alert("严重错误: 调色表不存在!", "Fatal: No Palette view!");
+    return;
+
+#if 0
+    //FIXME: 因为内存不够了, 暂时先不要显示颜色表
     extern gui_widget * palette_screen;
     data = data;
     gui_set_root_widget(palette_screen);
@@ -697,6 +702,7 @@ void cmd_main_PALETTE(void * data)
     clrkey();
     set_buttons_caption_to_default();
     gui_set_root_widget(main_screen);
+#endif
 }
 
 void cmd_main_QUIT(void * data)
@@ -1886,7 +1892,7 @@ void start_main_loop(void)
 
     for(;;){
         set_buttons_caption_to_default();
-        do_buttoncmds(cmd_main, main_buttons, 8, 1,
+        do_buttoncmds(cmd_main, main_buttons, main_buttons_max, 1,
             BUTTON_STYLE_CLIENT_BDR | BUTTON_STYLE_MODAL_FRAME | BUTTON_STYLE_PRESSED, 
             BUTTON_STYLE_CLIENT_BDR | BUTTON_STYLE_MODAL_FRAME);
     }

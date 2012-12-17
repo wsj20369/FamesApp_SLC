@@ -50,10 +50,12 @@ void slc_init_gui(void);
 void example_init_xms(void);
 void early_loads(void);
 
+#if 0
 void init_welcome_screen(void);
 void welcome_start(void);
 void welcome_ended(void);
 void startup_message(INT08S * s);
+#endif
 
 void show_palette_init(void);
 

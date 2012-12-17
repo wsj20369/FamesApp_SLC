@@ -60,8 +60,11 @@ void load_bmps(void)
     InitBMPINFO(&company_bmp);
     LoadBmp(&company_bmp, company_bmp_fname);
 
+    #if 0
+    /* 为了节省内存, 不要加载这个图片了 */
     InitBMPINFO(&welcome_picture);
     LoadBmp(&welcome_picture, welcome_filename);
+    #endif
 
     InitBMPINFO(&machine_name[0]);
     LoadBmp(&machine_name[0], m1_bmp_filename);
