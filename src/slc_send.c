@@ -208,6 +208,10 @@ BOOL slc_send_order(int slc_index, order_struct * order, int no_control)
         gui_set_widget_bkcolor(status_bar, COLOR_WARNING_236);
         waitkey(2000);
         gui_set_widget_bkcolor(status_bar, ___bkcolor);
+        /* 即使订单有错误, 也需要保存订单到描述符
+         * 因为如果不这样的话, 将无法继续换单.
+         */
+        slc->working = *order;
     }
 
 out:
@@ -247,7 +251,7 @@ void reset_kl_on_quit(void)
 }
 
 /*-----------------------------------------------------------------------------------------
- * 函数:    slc_read_regress_value()
+ * 函数:    slc_read_act_value()
  *
  * 描述:    从PLC读取刀线实际值
 **---------------------------------------------------------------------------------------*/

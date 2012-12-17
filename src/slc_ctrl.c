@@ -15,6 +15,20 @@
 BOOL slc_is_fixed_ok(int slc_index);
 
 /*------------------------------------------------------------------------------------
+ *
+ * 测试例程
+ *
+**----------------------------------------------------------------------------------*/
+static int force_oc = 0; /* 用于测试换单过程 */
+
+void test_force_oc(void)
+{
+    force_oc = 1;
+}
+
+#define TEST_SLC_CONTROL 0
+
+/*------------------------------------------------------------------------------------
  * 函数:    slc_control_service()
  *
  * 描述:    SLC的主要控制过程(SLC服务器)
@@ -36,6 +50,10 @@ void __daemon slc_control_service(void * data)
     int  CimChg_Flag, CimChg_Step, CIM_COK, CIMUP;
     int  ORD_USE[2];
     order_struct order;
+
+    #if TEST_SLC_CONTROL == 1
+    RegisterSpecialKey('c', test_force_oc);
+    #endif
 
     data = data;
 
@@ -156,11 +174,12 @@ again_and_again:
 
         state = &slc->state;
         if(edge_up(state->fixed, old->fixed)){ /* 定位信号 */
+            /* FIXME: 在双机的情况下, 这里可能会有问题 */
             if(tmp_config.auto_kl){
                 slc_kl_down_set(slc_index+1);
             }
         }
-        if(edge_up(state->order_chg, old->order_chg)){ /* 手动换单信号 */
+        if(force_oc || edge_up(state->order_chg, old->order_chg)){ /* 手动换单信号 */
             do {
                 if(ORD_USE[0] != (slc_index+1))
                     break; /* 只有第1笔单是本机的, 才能换 */
@@ -173,6 +192,7 @@ again_and_again:
                 }
                 TaskDelay(50);
             } while(1);
+            force_oc = 0;
         }
         if(state->start){ /* 启动信号 */
             Start_Flag_delay[slc_index] = 1;
