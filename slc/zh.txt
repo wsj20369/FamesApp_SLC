@@ -13,7 +13,7 @@ company_picture=company.bmp
 
 
 [主画面]
-slc_title=分压机控制系统(Ver: 0.9.8) - SLC开发组(HanChao, JY524CE)
+slc_title=分压机控制系统(Ver: 0.9.9) - SLC开发组(HanChao, JY524CE)
 first_note=提示: 如果您累了, 就要休息休息! 祝您工作顺利, 笑口常开!
 
 
