@@ -85,6 +85,7 @@ char * PLC_ADDR_FINE_TUNE_L[] = { /* 线微调启动 */
                                   "M0830", "M0831", "M0832", "M0833", "M0834",
                                   "M0835", "M0836", "M0837", "M0838", "M0839",
 };
+char   PLC_ADDR_SELECTED_KL[] = "R00480";  /* 刀线选中状态(兼容另一种分压机, 5K8L) */
 char   PLC_ADDR_FINE_TUNE[]   = "M0680";   /* 刀线微调总启动        */
 char   PLC_ADDR_YX[]          = "M0750";   /* 压型起始地址          */
 char   PLC_ADDR_SET_PRESS1[]  = "R01926";  /* 前压设定值            */
@@ -198,6 +199,7 @@ extern char * PLC_ADDR_SELECTED_K[];
 extern char * PLC_ADDR_SELECTED_L[];
 extern char * PLC_ADDR_FINE_TUNE_K[];
 extern char * PLC_ADDR_FINE_TUNE_L[];
+extern char   PLC_ADDR_SELECTED_KL[];
 extern char   PLC_ADDR_FINE_TUNE[];
 extern char   PLC_ADDR_YX[];
 extern char   PLC_ADDR_SET_PRESS1[];

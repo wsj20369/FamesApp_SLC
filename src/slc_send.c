@@ -97,6 +97,7 @@ BOOL slc_send_order(int slc_index, order_struct * order, int no_control)
     slc_descriptor_t * slc;
     char x_buf[1024], ___s[128];
     int  i, cuts;
+    INT16U k_mask, l_mask, kl_mask; /* 刀线选中状态 */
     INT32U error;
     BOOL   retval;
     INT16U locate_flag = 0;
@@ -150,18 +151,54 @@ BOOL slc_send_order(int slc_index, order_struct * order, int no_control)
 
         /* 发送设定值到PLC */
         slc_clear_fix_ok(slc_index); /* 清除定位完成信号 */
+
+        /* 计算刀线的选中情况, 并存放到k_mask, l_mask中 */
+        k_mask = 0;
+        l_mask = 0;
         for(i=0; i<slc->k_number; i++){
-            long temp;
-            temp = slc->kl_set.k_location[i];
-            ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_DR, PLC_ADDR_SET_VALUE_K[i], &temp, 1);
-            ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_M,  PLC_ADDR_SELECTED_K[i],  &(slc->kl_set.k_selected[i]), 1);
+            if (slc->kl_set.k_selected[i])
+                k_mask |= (1 << i);
         }
         for(i=0; i<slc->l_number; i++){
-            long temp;
-            temp = slc->kl_set.l_location[i];
-            ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_DR, PLC_ADDR_SET_VALUE_L[i], &temp, 1);
-            ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_M,  PLC_ADDR_SELECTED_L[i],  &(slc->kl_set.l_selected[i]), 1);
+            if (slc->kl_set.l_selected[i])
+                l_mask |= (1 << i);
         }
+        /* FIXME: 启动模式应该还有其它的功能, 而不只是控制排单 */
+        if ((config.slc_start_mode == 0) || (k_mask != 0)) {
+            for(i=0; i<slc->k_number; i++){
+                long temp;
+                temp = slc->kl_set.k_location[i];
+                ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_DR, PLC_ADDR_SET_VALUE_K[i], &temp, 1);
+                ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_M,  PLC_ADDR_SELECTED_K[i],  &(slc->kl_set.k_selected[i]), 1);
+            }
+        } else { /* 设定值 <- 实际值 */
+            for(i=0; i<slc->k_number; i++){
+                int temp;
+                temp = slc->kl_act.k_location[i];
+                slc->kl_set.k_location[i] = temp;
+            }
+        }
+        /* FIXME: 启动模式应该还有其它的功能, 而不只是控制排单 */
+        if ((config.slc_start_mode == 0) || (l_mask != 0)) {
+            for(i=0; i<slc->l_number; i++){
+                long temp;
+                temp = slc->kl_set.l_location[i];
+                ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_DR, PLC_ADDR_SET_VALUE_L[i], &temp, 1);
+                ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_M,  PLC_ADDR_SELECTED_L[i],  &(slc->kl_set.l_selected[i]), 1);
+            }
+        } else { /* 设定值 <- 实际值 */
+            for(i=0; i<slc->l_number; i++){
+                int temp;
+                temp = slc->kl_act.l_location[i];
+                slc->kl_set.l_location[i] = temp;
+            }
+        }
+#ifdef USE__PLC_ADDR_SELECTED_KL
+        kl_mask  = (l_mask << slc->k_number);
+        kl_mask |= (k_mask);
+        ___slc_plc_rw_ensure(slc_index, FATEK_PLC_WRITE_R, PLC_ADDR_SELECTED_KL, &kl_mask, 1);
+#endif
+
         slc->kl_set.press_type = order->YX;
         slc_set_yx(slc_index, order->YX);     /* 压型设定值 */
         deep = get_deep_value(order->FLUTE, order->YX);

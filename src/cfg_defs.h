@@ -24,6 +24,7 @@
 
 #define CONFIG_NOACTION_ON_QUIT         1       /* 退出时, 不做任何动作 */
 
+#define USE__PLC_ADDR_SELECTED_KL               /* 刀线选中状态的另一个集合 */
 
 enum {                                          /* 启动时的送单模式 */
     _SendOrderMode_None = 0,
