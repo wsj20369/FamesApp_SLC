@@ -1,7 +1,7 @@
 COMPILER    = tcc -c -1 -B -S -ml -w -Ic:\tc\include
 LINKER      = tlink /3
 STD_OBJ     = c:\tc\lib\c0l.obj
-STD_LIB     = c:\tc\lib\cxc.lib+..\lib\os.lib
+STD_LIB     = c:\tc\lib\cxc.lib+..\lib\v0-7-3\os.lib
 ALL_LIB     = src\slc.lib
 ALL_LIST    = src\slc.lib
 

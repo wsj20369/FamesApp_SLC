@@ -1,4 +1,4 @@
-COMPILER    = tcc -c -1 -B -S -ml -w -Ic:\tc\include -I..\..\lib\include
+COMPILER    = tcc -c -1 -B -S -ml -w -Ic:\tc\include -I..\..\lib\v0-7-3\include
 HEADFILE    = common.h config.h keycmd.h order.h ord_edit.h preview.h slc_core.h slc_mntr.h slc_para.h slc_whet.h passwd.h yes_no.h yx_dat.h slc_lb.h cim_link.h io_card.h slc_ctrl.h slc_reg.h reg_core.h cfg_defs.h plc_def.h plc_defs\plc_defs.lst
 
 dstfile     = slc.lib
